@@ -1,16 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_root"
     android:orientation="vertical"
-    android:background="@android:color/white"
-    android:padding="8dp"
+    android:background="@drawable/rounded_corner_main"
+    android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="@string/titulo_widget"
+            android:gravity="center_vertical|left"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8"
+            android:src="@drawable/ic_add_note"
+            android:background="@color/transparent3"
+            android:contentDescription="@string/descripcion_boton_add"/>
+    </LinearLayout>
 
     <ListView
         android:id="@+id/widget_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="8dp" />
+        android:layout_marginTop="10dp"
+        android:dividerHeight="10dp"
+        android:scrollbars="none"
+        android:divider="@color/transparent3"/>
 </LinearLayout>

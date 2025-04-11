@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">HarmoniNote</string>
+    <string name="titulo_widget">Notas</string>
+    <string name="descripcion_boton_add">Boton para agregar una nota</string>
 </resources>

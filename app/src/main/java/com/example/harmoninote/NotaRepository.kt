@@ -4,7 +4,7 @@ object NotaRepository {
     private val notas = mutableListOf(
         Nota(1, "Comprar leche"),
         Nota(2, "Estudiar Kotlin"),
-        Nota(3, "Llamar a la tía"),
+        Nota(3, "Investigar sobre la inperfeccion natural de los humanos pedorros que no aprenden nunca"),
         Nota(4, "Llamar a la tía"),
         Nota(5, "Llamar a la tía"),
         Nota(6, "Llamar a la tía"),
