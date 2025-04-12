@@ -2,6 +2,7 @@ package com.example.harmoninote
 
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
@@ -27,5 +28,22 @@ class NotaWidget : AppWidgetProvider() {
     }
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
+        if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE && context != null) {
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NotaWidget::class.java))
+            appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_list_view)
+        }
     }
+    companion object {
+        fun updateWidget(context: Context) {
+            val intent = Intent(context, NotaWidget::class.java).apply {
+                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            }
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NotaWidget::class.java))
+            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
+            context.sendBroadcast(intent)
+        }
+    }
+
 }
