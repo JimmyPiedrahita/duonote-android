@@ -8,6 +8,7 @@ import android.widget.RemoteViews
 import kotlin.jvm.java
 import androidx.core.net.toUri
 
+@Suppress("DEPRECATION")
 class NotaWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
