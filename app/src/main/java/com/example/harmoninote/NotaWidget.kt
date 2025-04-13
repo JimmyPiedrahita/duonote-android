@@ -1,5 +1,6 @@
 package com.example.harmoninote
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
@@ -23,6 +24,16 @@ class NotaWidget : AppWidgetProvider() {
                 setRemoteAdapter(R.id.widget_list_view, intent)
                 setEmptyView(R.id.widget_list_view, android.R.id.empty)
             }
+            val dialogIntent = Intent(context, DialogActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            val pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                dialogIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setOnClickPendingIntent(R.id.imageButton, pendingIntent)
             appWidgetManager.updateAppWidget(widgetId, views)
         }
     }
