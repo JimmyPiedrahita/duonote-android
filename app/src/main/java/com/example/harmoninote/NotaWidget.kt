@@ -45,5 +45,4 @@ class NotaWidget : AppWidgetProvider() {
             context.sendBroadcast(intent)
         }
     }
-
 }

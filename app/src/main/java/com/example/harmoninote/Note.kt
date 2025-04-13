@@ -1,6 +1,6 @@
 package com.example.harmoninote
 
-data class Nota(
+data class Note(
     val id: String = "",
     val text: String = ""
 )

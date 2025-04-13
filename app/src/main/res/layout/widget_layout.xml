@@ -20,7 +20,7 @@
             android:layout_weight="2"
             android:textSize="20sp"
             android:textColor="@color/white"
-            android:text="@string/titulo_widget"
+            android:text="@string/tittle_widget"
             android:gravity="center_vertical|left"
             tools:ignore="RtlHardcoded" />
 
@@ -31,7 +31,7 @@
             android:layout_weight="8"
             android:src="@drawable/ic_add_note"
             android:background="@color/transparent3"
-            android:contentDescription="@string/descripcion_boton_add"/>
+            android:contentDescription="@string/description_button_add"/>
     </LinearLayout>
 
     <ListView

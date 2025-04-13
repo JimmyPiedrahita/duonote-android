@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
-    private var listNotes = mutableListOf<Nota>()
+    private var listNotes = mutableListOf<Note>()
     override fun onCreate() {}
     override fun onDataSetChanged() {
         val dbRef = FirebaseDatabase.getInstance().getReference("notes")
@@ -23,7 +23,7 @@ class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
                     val text = notaSnapshot.child("Text").getValue(String::class.java)
                     val id = notaSnapshot.key
                     if (text != null && id != null) {
-                        listNotes.add(Nota(id, text))
+                        listNotes.add(Note(id, text))
                     }
                 }
                 latch.countDown()
