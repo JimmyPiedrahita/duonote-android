@@ -43,6 +43,12 @@ class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
         val note = listNotes[position]
         val views = RemoteViews(context.packageName, R.layout.widget_item)
         views.setTextViewText(R.id.note_item_text, note.text)
+        val backgroundResId = if (note.isCompleted == true){
+            R.drawable.bg_rounded_note_completed
+        }else{
+            R.drawable.bg_rounded_note_pending
+        }
+        views.setInt(R.id.note_item_text, "setBackgroundResource", backgroundResId)
         return views
     }
 
