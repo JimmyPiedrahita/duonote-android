@@ -22,18 +22,21 @@ class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
                 for (notaSnapshot in snapshot.children) {
                     val text = notaSnapshot.child("Text").getValue(String::class.java)
                     val id = notaSnapshot.key
-                    if (text != null && id != null) {
-                        listNotes.add(Note(id, text))
-                    }
+                    val timestamp = notaSnapshot.child("TimeStamp").getValue(Long::class.java)
+                    val isCompleted =
+                        notaSnapshot.child("IsCompleted").getValue(Boolean::class.java)
+                    listNotes.add(Note(id, text, timestamp, isCompleted))
                 }
                 latch.countDown()
             }
+
             override fun onCancelled(error: DatabaseError) {
                 latch.countDown()
             }
         })
         latch.await(1, TimeUnit.SECONDS)
     }
+
     override fun onDestroy() {}
     override fun getCount(): Int = listNotes.size
     override fun getViewAt(position: Int): RemoteViews? {
@@ -42,6 +45,7 @@ class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
         views.setTextViewText(R.id.note_item_text, note.text)
         return views
     }
+
     override fun getLoadingView(): RemoteViews? = null
     override fun getViewTypeCount(): Int = 1
     override fun getItemId(position: Int): Long = position.toLong()

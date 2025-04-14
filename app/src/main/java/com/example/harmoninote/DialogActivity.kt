@@ -17,7 +17,9 @@ class DialogActivity : AppCompatActivity() {
             if (noteText.isNotEmpty()) {
                 val db = FirebaseDatabase.getInstance().getReference("notes")
                 val noteId = db.push().key ?: return@setOnClickListener
-                db.child(noteId).setValue(mapOf("Text" to noteText))
+                val currentTimestamp = System.currentTimeMillis()
+                val isCompleted = false
+                db.child(noteId).setValue(mapOf("Text" to noteText, "Timestamp" to currentTimestamp, "IsCompleted" to isCompleted))
                 NotaWidget.updateWidget(applicationContext)
                 finish()
             }
