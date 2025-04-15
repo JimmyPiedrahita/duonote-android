@@ -9,8 +9,13 @@ class NoteActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val noteId = intent.getStringExtra("NOTE_ID")
         if (noteId == null) return
-        val dbRef = FirebaseDatabase.getInstance().getReference("notes").child(noteId)
-        dbRef.removeValue()
+        val noteRef = FirebaseDatabase.getInstance().getReference("notes").child(noteId)
+        noteRef.child("IsCompleted").get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val isCompleted = task.result?.getValue(Boolean::class.java) == true
+                noteRef.child("IsCompleted").setValue(!isCompleted)
+            }
+        }
         NoteWidget.updateWidget(context)
     }
 }
