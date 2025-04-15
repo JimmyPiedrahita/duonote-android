@@ -11,12 +11,12 @@ import kotlin.jvm.java
 import androidx.core.net.toUri
 
 @Suppress("DEPRECATION")
-class NotaWidget : AppWidgetProvider() {
+class NoteWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         for (widgetId in appWidgetIds) {
-            val intent = Intent(context, NotaWidgetService::class.java).apply {
+            val intent = Intent(context, NoteWidgetService::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
                 data = this.toUri(Intent.URI_INTENT_SCHEME).toUri()
             }
@@ -56,17 +56,17 @@ class NotaWidget : AppWidgetProvider() {
         super.onReceive(context, intent)
         if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE && context != null) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
-            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NotaWidget::class.java))
+            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
             appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_list_view)
         }
     }
     companion object {
         fun updateWidget(context: Context) {
-            val intent = Intent(context, NotaWidget::class.java).apply {
+            val intent = Intent(context, NoteWidget::class.java).apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             }
             val appWidgetManager = AppWidgetManager.getInstance(context)
-            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NotaWidget::class.java))
+            val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
             context.sendBroadcast(intent)
         }

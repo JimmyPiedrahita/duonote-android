@@ -2,7 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="transparent">#80000000</color>
-    <color name="transparent2">#9A000000</color>
-    <color name="transparent3">#00000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="color1">#CD464B4B</color>
+    <color name="color2">#CD798787</color>
+    <color name="color3">#CD455151</color>
 </resources>

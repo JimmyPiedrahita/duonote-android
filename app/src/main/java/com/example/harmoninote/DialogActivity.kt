@@ -20,7 +20,7 @@ class DialogActivity : AppCompatActivity() {
                 val currentTimestamp = System.currentTimeMillis()
                 val isCompleted = false
                 db.child(noteId).setValue(mapOf("Text" to noteText, "Timestamp" to currentTimestamp, "IsCompleted" to isCompleted))
-                NotaWidget.updateWidget(applicationContext)
+                NoteWidget.updateWidget(applicationContext)
                 finish()
             }
         }

@@ -17,7 +17,7 @@ class FirebaseListenerService : Service() {
     private lateinit var databaseReference: DatabaseReference
     private val listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            NotaWidget.updateWidget(applicationContext)
+            NoteWidget.updateWidget(applicationContext)
         }
         override fun onCancelled(error: DatabaseError) {
             Log.e("FirebaseService", "Error: ${error.message}")

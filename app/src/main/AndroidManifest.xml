@@ -27,7 +27,7 @@
             android:name=".DialogActivity"
             android:theme="@style/Theme.AppCompat.Dialog"
             android:exported="true"/>
-        <receiver android:name=".NotaWidget" android:exported="true">
+        <receiver android:name=".NoteWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
@@ -44,7 +44,7 @@
         <receiver android:name=".NoteActionReceiver" android:exported="true"
             tools:ignore="ExportedReceiver" />
         <service
-            android:name=".NotaWidgetService"
+            android:name=".NoteWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"
             android:exported="false">
             <intent-filter>

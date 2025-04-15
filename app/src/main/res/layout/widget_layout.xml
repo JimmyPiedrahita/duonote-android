@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_weight="8"
             android:src="@drawable/ic_add_note"
-            android:background="@color/transparent3"
+            android:background="@color/transparent"
             android:contentDescription="@string/description_button_add"/>
     </LinearLayout>
 
@@ -41,5 +41,6 @@
         android:layout_marginTop="10dp"
         android:dividerHeight="10dp"
         android:scrollbars="none"
-        android:divider="@color/transparent3"/>
+        android:divider="@color/transparent"
+        android:listSelector="@color/transparent"/>
 </LinearLayout>

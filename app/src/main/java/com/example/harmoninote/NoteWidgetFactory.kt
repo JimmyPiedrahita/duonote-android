@@ -11,7 +11,7 @@ import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
+class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
     private var listNotes = mutableListOf<Note>()
     override fun onCreate() {}
     override fun onDataSetChanged() {
@@ -45,9 +45,9 @@ class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
         val views = RemoteViews(context.packageName, R.layout.widget_item)
         views.setTextViewText(R.id.note_item_text, note.text)
         val backgroundResId = if (note.isCompleted == true){
-            R.drawable.bg_rounded_note_completed
+            R.drawable.bg_ripple_note_completed
         }else{
-            R.drawable.bg_rounded_note_pending
+            R.drawable.bg_ripple_note_pending
         }
         views.setInt(R.id.note_item_text, "setBackgroundResource", backgroundResId)
 

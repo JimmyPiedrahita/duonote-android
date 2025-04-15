@@ -8,6 +8,6 @@ import android.util.Log
 class NoteActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("resultado", "${intent.getStringExtra("NOTE_ID")}")
-        NotaWidget.updateWidget(context)
+        NoteWidget.updateWidget(context)
     }
 }
