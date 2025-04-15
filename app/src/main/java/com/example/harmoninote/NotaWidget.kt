@@ -34,6 +34,21 @@ class NotaWidget : AppWidgetProvider() {
                 PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.imageButton, pendingIntent)
+
+
+
+            val clickIntent = Intent(context, NoteActionReceiver::class.java)
+            val pendingIntentTemplate = PendingIntent.getBroadcast(
+                context,
+                0,
+                clickIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            views.setPendingIntentTemplate(R.id.widget_list_view, pendingIntentTemplate)
+
+
+
+
             appWidgetManager.updateAppWidget(widgetId, views)
         }
     }

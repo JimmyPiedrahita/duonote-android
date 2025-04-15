@@ -1,6 +1,7 @@
 package com.example.harmoninote
 
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import com.google.firebase.database.DataSnapshot
@@ -49,6 +50,19 @@ class NotaWidgetFactory(private val context: Context) : RemoteViewsFactory {
             R.drawable.bg_rounded_note_pending
         }
         views.setInt(R.id.note_item_text, "setBackgroundResource", backgroundResId)
+
+
+
+        val fillInIntent = Intent().apply {
+            putExtra("NOTE_ID", note.id)
+            putExtra("NOTE_TEXT", note.text)
+        }
+        views.setOnClickFillInIntent(R.id.note_item_text, fillInIntent)
+
+
+
+
+
         return views
     }
 
