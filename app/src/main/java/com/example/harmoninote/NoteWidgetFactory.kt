@@ -51,6 +51,21 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
             R.drawable.bg_ripple_note_pending
         }
         views.setInt(R.id.note_item_text, "setBackgroundResource", backgroundResId)
+        if (note.isCompleted == true) {
+            views.setInt(R.id.note_item_text, "setTextColor", android.graphics.Color.GRAY)
+            views.setInt(
+                R.id.note_item_text,
+                "setPaintFlags",
+                android.graphics.Paint.STRIKE_THRU_TEXT_FLAG or android.graphics.Paint.ANTI_ALIAS_FLAG
+            )
+        } else {
+            views.setInt(R.id.note_item_text, "setTextColor", android.graphics.Color.WHITE)
+            views.setInt(
+                R.id.note_item_text,
+                "setPaintFlags",
+                android.graphics.Paint.ANTI_ALIAS_FLAG
+            )
+        }
         val fillInIntent = Intent().apply {
             putExtra("NOTE_ID", note.id)
         }
