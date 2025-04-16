@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_weight="8"
             android:src="@drawable/ic_add_note"
-            android:background="@color/transparent"
+            android:background="@drawable/bg_ripple_add_note"
             android:contentDescription="@string/description_button_add"/>
     </LinearLayout>
 
