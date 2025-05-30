@@ -2,4 +2,5 @@
     <string name="app_name">HarmoniNote</string>
     <string name="tittle_widget">Notes</string>
     <string name="description_button_add">Button to add a note</string>
+    <string name="description_button_copy">Button to copy the text of the note</string>
 </resources>

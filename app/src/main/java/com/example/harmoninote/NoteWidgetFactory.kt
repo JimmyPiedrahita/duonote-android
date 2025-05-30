@@ -2,7 +2,6 @@ package com.example.harmoninote
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import com.google.firebase.database.DataSnapshot
@@ -69,6 +68,14 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         val fillInIntent = Intent().apply {
             putExtra("NOTE_ID", note.id)
         }
+
+        val fillInIntentButton = Intent().apply {
+            putExtra("NOTE_ID", note.id)
+            putExtra("NOTE_TEXT",note.text)
+            action = "ACTION_COPY_TEXT"
+        }
+
+        views.setOnClickFillInIntent(R.id.note_item_button, fillInIntentButton)
         views.setOnClickFillInIntent(R.id.note_item_text, fillInIntent)
         return views
     }
