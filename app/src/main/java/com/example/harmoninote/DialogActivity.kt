@@ -13,7 +13,7 @@ class DialogActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.edit_note)
         val btnAdd = findViewById<Button>(R.id.btn_add_note)
         btnAdd.setOnClickListener {
-            val noteText = editText.text.toString()
+            val noteText = editText.text.toString().trim()
             if (noteText.isNotEmpty()) {
                 val db = FirebaseDatabase.getInstance().getReference("notes")
                 val noteId = db.push().key ?: return@setOnClickListener
