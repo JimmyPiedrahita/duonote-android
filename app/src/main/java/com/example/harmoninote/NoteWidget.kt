@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.RemoteViews
 import kotlin.jvm.java
 import androidx.core.net.toUri
@@ -27,19 +28,34 @@ class NoteWidget : AppWidgetProvider() {
             val dialogIntent = Intent(context, DialogActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
+
+            // Compatibilidad con versiones Android 12+ y anteriores
+            val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_IMMUTABLE
+            } else {
+                0
+            }
+
             val pendingIntent = PendingIntent.getActivity(
                 context,
                 0,
                 dialogIntent,
-                PendingIntent.FLAG_IMMUTABLE
+                pendingIntentFlags
             )
             views.setOnClickPendingIntent(R.id.imageButton, pendingIntent)
             val clickIntent = Intent(context, NoteActionReceiver::class.java)
+
+            val broadcastFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+
             val pendingIntentTemplate = PendingIntent.getBroadcast(
                 context,
                 0,
                 clickIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                broadcastFlags
             )
             views.setPendingIntentTemplate(R.id.widget_list_view, pendingIntentTemplate)
             appWidgetManager.updateAppWidget(widgetId, views)
