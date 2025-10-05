@@ -8,6 +8,8 @@ import android.content.Intent
 import android.widget.Toast
 import com.google.firebase.database.FirebaseDatabase
 import androidx.core.content.edit
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.first
 
 class NoteActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
@@ -22,7 +24,13 @@ class NoteActionReceiver : BroadcastReceiver() {
                 Toast.makeText(context, "Copied text", Toast.LENGTH_SHORT).show()
             }
             else -> {
-                val dbRef = FirebaseDatabase.getInstance().getReference("notes").child(noteId)
+                // Obtener el valor del QR desde DataStore
+                val qrDataStore = QRDataStore(context)
+                val contentQR = runBlocking {
+                    qrDataStore.qrContent.first() ?: "default"
+                }
+
+                val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(contentQR).child("Notes").child(noteId)
                 val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
                 val lastClickTime = prefs.getLong("last_click_time_$noteId", 0L)
                 val currentTime = System.currentTimeMillis()
