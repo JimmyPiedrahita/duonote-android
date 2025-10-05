@@ -28,7 +28,7 @@ class DialogActivity : AppCompatActivity() {
                     // Obtener el valor del QR escaneado desde DataStore
                     val contentQR = qrDataStore.qrContent.first() ?: "default"
 
-                    val db = FirebaseDatabase.getInstance().getReference("notas").child(contentQR).child("notes")
+                    val db = FirebaseDatabase.getInstance().getReference("Connections").child(contentQR).child("Notes")
                     val noteId = db.push().key ?: return@launch
                     val currentTimestamp = System.currentTimeMillis()
                     val isCompleted = false

@@ -10,12 +10,24 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.flow.first
 
 class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
     private var listNotes = mutableListOf<Note>()
-    override fun onCreate() {}
+    private lateinit var qrDataStore: QRDataStore
+
+    override fun onCreate() {
+        qrDataStore = QRDataStore(context)
+    }
+
     override fun onDataSetChanged() {
-        val dbRef = FirebaseDatabase.getInstance().getReference("notes")
+        // Obtener el valor del QR desde DataStore
+        val contentQR = runBlocking {
+            qrDataStore.qrContent.first() ?: "default"
+        }
+
+        val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(contentQR).child("Notes")
         val latch = CountDownLatch(1)
         dbRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
