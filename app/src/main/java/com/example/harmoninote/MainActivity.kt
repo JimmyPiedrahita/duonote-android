@@ -16,10 +16,13 @@ import androidx.core.view.WindowInsetsCompat
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnScanQR: Button
     private lateinit var tvQRResult: TextView
+    private lateinit var qrDataStore: QRDataStore
 
     // Launcher para solicitar permiso de cámara
     private val requestPermissionLauncher = registerForActivityResult(
@@ -37,8 +40,15 @@ class MainActivity : AppCompatActivity() {
         if (result.contents == null) {
             Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
         } else {
-            tvQRResult.text = "Resultado: ${result.contents}"
-            Toast.makeText(this, "Código QR escaneado: ${result.contents}", Toast.LENGTH_LONG).show()
+            val qrContent = result.contents
+            tvQRResult.text = "Resultado: $qrContent"
+            Toast.makeText(this, "Código QR escaneado: $qrContent", Toast.LENGTH_LONG).show()
+
+            // Guardar en DataStore
+            lifecycleScope.launch {
+                qrDataStore.saveQRContent(qrContent)
+                Toast.makeText(this@MainActivity, "QR guardado en DataStore", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -47,9 +57,21 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        // Inicializar DataStore
+        qrDataStore = QRDataStore(this)
+
         // Inicializar vistas
         btnScanQR = findViewById(R.id.btnScanQR)
         tvQRResult = findViewById(R.id.tvQRResult)
+
+        // Cargar el último QR escaneado si existe
+        lifecycleScope.launch {
+            qrDataStore.qrContent.collect { savedContent ->
+                savedContent?.let {
+                    tvQRResult.text = "Último QR guardado: $it"
+                }
+            }
+        }
 
         // Configurar el botón de escaneo
         btnScanQR.setOnClickListener {
