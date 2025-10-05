@@ -23,14 +23,22 @@ class FirebaseListenerService : Service() {
     private lateinit var databaseReference: DatabaseReference
     private lateinit var qrDataStore: QRDataStore
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var currentQRContent: String? = null
 
     private val listener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
+            Log.d("FirebaseService", "Data changed - updating widget")
             NoteWidget.updateWidget(applicationContext)
         }
 
         override fun onCancelled(error: DatabaseError) {
             Log.e("FirebaseService", "Error: ${error.message}")
+            // Reintentar la conexión después de un error
+            serviceScope.launch {
+                android.os.Handler(mainLooper).postDelayed({
+                    setupFirebaseListener()
+                }, 3000) // Reintentar después de 3 segundos
+            }
         }
     }
 
@@ -38,24 +46,70 @@ class FirebaseListenerService : Service() {
         super.onCreate()
         qrDataStore = QRDataStore(this)
 
-        // Obtener el valor del QR desde DataStore
+        // Habilitar persistencia de Firebase (mantiene datos locales sincronizados)
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true)
+        } catch (e: Exception) {
+            Log.w("FirebaseService", "Persistence already enabled or failed: ${e.message}")
+        }
+
+        // Configurar listener de Firebase
+        setupFirebaseListener()
+
+        // Monitorear cambios en el QR guardado
         serviceScope.launch {
-            val contentQR = qrDataStore.qrContent.first() ?: "default"
-            databaseReference =
-                FirebaseDatabase.getInstance().getReference("Connections").child(contentQR)
-                    .child("Notes")
-            databaseReference.addValueEventListener(listener)
+            qrDataStore.qrContent.collect { newQR ->
+                if (newQR != null && newQR != currentQRContent) {
+                    Log.d("FirebaseService", "QR changed from $currentQRContent to $newQR")
+                    currentQRContent = newQR
+                    // Remover listener anterior si existe
+                    if (::databaseReference.isInitialized) {
+                        databaseReference.removeEventListener(listener)
+                    }
+                    // Configurar nuevo listener
+                    setupFirebaseListener()
+                }
+            }
         }
 
         startForegroundServiceWithNotification()
     }
 
+    private fun setupFirebaseListener() {
+        serviceScope.launch {
+            val contentQR = qrDataStore.qrContent.first() ?: "default"
+            Log.d("FirebaseService", "Setting up listener for QR: $contentQR")
+
+            val database = FirebaseDatabase.getInstance()
+            // Mantener la conexión activa
+            database.goOnline()
+
+            databaseReference = database.getReference("Connections")
+                .child(contentQR)
+                .child("Notes")
+
+            // Mantener sincronización local activa
+            databaseReference.keepSynced(true)
+
+            // Agregar listener
+            databaseReference.addValueEventListener(listener)
+
+            Log.d("FirebaseService", "Listener attached successfully")
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        Log.d("FirebaseService", "Service destroying")
         if (::databaseReference.isInitialized) {
             databaseReference.removeEventListener(listener)
         }
         serviceScope.cancel()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Asegurar que el servicio se reinicie si es eliminado por el sistema
+        return START_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? = null

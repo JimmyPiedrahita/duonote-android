@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity() {
             sessionRef.setValue(true)
                 .addOnSuccessListener {
                     Toast.makeText(this@MainActivity, "Sesión activada en Firebase", Toast.LENGTH_SHORT).show()
+                    // Reiniciar el servicio para que escuche el nuevo QR
+                    restartFirebaseService()
                 }
                 .addOnFailureListener { exception ->
                     Toast.makeText(this@MainActivity, "Error al activar sesión: ${exception.message}", Toast.LENGTH_SHORT).show()
@@ -90,13 +92,36 @@ class MainActivity : AppCompatActivity() {
             checkCameraPermissionAndScan()
         }
 
-        val serviceIntent = Intent(this, FirebaseListenerService::class.java)
-        startForegroundService(serviceIntent)
+        // Iniciar servicio de Firebase
+        startFirebaseService()
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Asegurar que el servicio esté corriendo cuando la app vuelve al primer plano
+        startFirebaseService()
+    }
+
+    private fun startFirebaseService() {
+        val serviceIntent = Intent(this, FirebaseListenerService::class.java)
+        ContextCompat.startForegroundService(this, serviceIntent)
+    }
+
+    private fun restartFirebaseService() {
+        // Detener el servicio actual
+        val serviceIntent = Intent(this, FirebaseListenerService::class.java)
+        stopService(serviceIntent)
+
+        // Esperar un momento y reiniciar
+        android.os.Handler(mainLooper).postDelayed({
+            ContextCompat.startForegroundService(this, serviceIntent)
+        }, 500)
     }
 
     private fun checkCameraPermissionAndScan() {
