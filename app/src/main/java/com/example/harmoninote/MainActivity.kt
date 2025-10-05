@@ -18,6 +18,7 @@ import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnScanQR: Button
@@ -49,6 +50,17 @@ class MainActivity : AppCompatActivity() {
                 qrDataStore.saveQRContent(qrContent)
                 Toast.makeText(this@MainActivity, "QR guardado en DataStore", Toast.LENGTH_SHORT).show()
             }
+
+            // Actualizar sesion_activa en Firebase Realtime Database
+            val database = FirebaseDatabase.getInstance()
+            val sessionRef = database.getReference("Connections").child(qrContent).child("sesion_activa")
+            sessionRef.setValue(true)
+                .addOnSuccessListener {
+                    Toast.makeText(this@MainActivity, "Sesión activada en Firebase", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { exception ->
+                    Toast.makeText(this@MainActivity, "Error al activar sesión: ${exception.message}", Toast.LENGTH_SHORT).show()
+                }
         }
     }
 
