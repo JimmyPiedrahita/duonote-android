@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:layout_weight="10"
         android:textSize="16sp"
-        android:textColor="@color/white"
+        android:textColor="@color/widget_text_pending"
         android:padding="5dp"
         android:layout_margin="0dp"/>
 

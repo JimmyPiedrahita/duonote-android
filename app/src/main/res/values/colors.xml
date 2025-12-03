@@ -4,33 +4,44 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
     
-    <!-- Dark Theme Colors -->
-    <color name="md_theme_dark_primary">#D0BCFF</color>
-    <color name="md_theme_dark_onPrimary">#381E72</color>
-    <color name="md_theme_dark_primaryContainer">#4F378B</color>
-    <color name="md_theme_dark_onPrimaryContainer">#EADDFF</color>
-    <color name="md_theme_dark_secondary">#CCC2DC</color>
-    <color name="md_theme_dark_onSecondary">#332D41</color>
-    <color name="md_theme_dark_secondaryContainer">#4A4458</color>
-    <color name="md_theme_dark_onSecondaryContainer">#E8DEF8</color>
-    <color name="md_theme_dark_tertiary">#EFB8C8</color>
-    <color name="md_theme_dark_onTertiary">#492532</color>
-    <color name="md_theme_dark_tertiaryContainer">#633B48</color>
-    <color name="md_theme_dark_onTertiaryContainer">#FFD8E4</color>
-    <color name="md_theme_dark_error">#F2B8B5</color>
-    <color name="md_theme_dark_onError">#601410</color>
-    <color name="md_theme_dark_errorContainer">#8C1D18</color>
-    <color name="md_theme_dark_onErrorContainer">#F9DEDC</color>
-    <color name="md_theme_dark_background">#121212</color>
-    <color name="md_theme_dark_onBackground">#E6E1E5</color>
-    <color name="md_theme_dark_surface">#1E1E1E</color>
-    <color name="md_theme_dark_onSurface">#E6E1E5</color>
-    <color name="md_theme_dark_surfaceVariant">#49454F</color>
-    <color name="md_theme_dark_onSurfaceVariant">#CAC4D0</color>
-    <color name="md_theme_dark_outline">#938F99</color>
+    <!-- Modern Dark Theme Colors (Deep Night / Violet) -->
+    <color name="md_theme_dark_primary">#B0C4DE</color> <!-- Light Steel Blue -->
+    <color name="md_theme_dark_onPrimary">#1E293B</color> <!-- Dark Slate -->
+    <color name="md_theme_dark_primaryContainer">#334155</color> <!-- Slate 700 -->
+    <color name="md_theme_dark_onPrimaryContainer">#E2E8F0</color> <!-- Slate 200 -->
     
-    <!-- Legacy colors mapped to new theme or kept for compatibility -->
-    <color name="color1">#2D2D2D</color>
-    <color name="color2">#3D3D3D</color>
-    <color name="color3">#4D4D4D</color>
+    <color name="md_theme_dark_secondary">#5EEAD4</color> <!-- Teal 300 -->
+    <color name="md_theme_dark_onSecondary">#0F172A</color>
+    <color name="md_theme_dark_secondaryContainer">#134E4A</color> <!-- Teal 900 -->
+    <color name="md_theme_dark_onSecondaryContainer">#CCFBF1</color>
+    
+    <color name="md_theme_dark_tertiary">#F472B6</color> <!-- Pink 400 -->
+    <color name="md_theme_dark_onTertiary">#4A044E</color>
+    <color name="md_theme_dark_tertiaryContainer">#831843</color>
+    <color name="md_theme_dark_onTertiaryContainer">#FCE7F3</color>
+    
+    <color name="md_theme_dark_error">#F87171</color>
+    <color name="md_theme_dark_onError">#450A0A</color>
+    <color name="md_theme_dark_errorContainer">#991B1B</color>
+    <color name="md_theme_dark_onErrorContainer">#FEE2E2</color>
+    
+    <color name="md_theme_dark_background">#0F172A</color> <!-- Slate 900 -->
+    <color name="md_theme_dark_onBackground">#E2E8F0</color> <!-- Slate 200 -->
+    <color name="md_theme_dark_surface">#1E293B</color> <!-- Slate 800 -->
+    <color name="md_theme_dark_onSurface">#E2E8F0</color>
+    
+    <color name="md_theme_dark_surfaceVariant">#334155</color> <!-- Slate 700 -->
+    <color name="md_theme_dark_onSurfaceVariant">#CBD5E1</color> <!-- Slate 300 -->
+    <color name="md_theme_dark_outline">#64748B</color> <!-- Slate 500 -->
+    
+    <!-- Widget Colors (Matching App Theme) -->
+    <color name="widget_background_pending">#334155</color> <!-- Matches Surface Variant -->
+    <color name="widget_background_completed">#1E293B</color> <!-- Matches Surface (darker) -->
+    <color name="widget_text_pending">#E2E8F0</color>
+    <color name="widget_text_completed">#64748B</color>
+
+    <!-- Legacy colors mapped to new theme -->
+    <color name="color1">#1E293B</color>
+    <color name="color2">#334155</color>
+    <color name="color3">#0F172A</color>
 </resources>
