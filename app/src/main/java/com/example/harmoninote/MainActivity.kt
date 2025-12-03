@@ -99,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         // Configurar RecyclerView
         noteAdapter = NoteAdapter(notesList, 
             onNoteClick = { note -> toggleNoteCompletion(note) },
+            onNoteDoubleClick = { note -> deleteNote(note) },
             onCopyClick = { note -> copyNoteText(note) }
         )
         rvNotes.layoutManager = LinearLayoutManager(this)
@@ -169,6 +170,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
         dbRef.addValueEventListener(notesListener!!)
+    }
+
+    private fun deleteNote(note: Note) {
+        val qrContent = currentQrContent ?: return
+        val noteId = note.id ?: return
+        val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes").child(noteId)
+        dbRef.removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(this, "Nota eliminada", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Error al eliminar nota", Toast.LENGTH_SHORT).show()
+            }
     }
 
     private fun toggleNoteCompletion(note: Note) {

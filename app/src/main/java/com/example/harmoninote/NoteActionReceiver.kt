@@ -36,18 +36,41 @@ class NoteActionReceiver : BroadcastReceiver() {
                 val currentTime = System.currentTimeMillis()
 
                 if (currentTime - lastClickTime < 500) {
-                    dbRef.removeValue()
+                    // Doble click detectado: ELIMINAR
+                    // Marcar como pendiente de eliminación para evitar que el toggle lo resucite
+                    prefs.edit { putBoolean("pending_delete_$noteId", true) }
+                    
+                    dbRef.removeValue().addOnCompleteListener {
+                        // Limpiar banderas
+                        prefs.edit { 
+                            remove("last_click_time_$noteId")
+                            remove("pending_delete_$noteId")
+                        }
+                        NoteWidget.updateWidget(context)
+                    }
                 } else {
+                    // Click simple: MARCAR COMO COMPLETADA (o pendiente)
+                    prefs.edit { 
+                        putLong("last_click_time_$noteId", currentTime)
+                        putBoolean("pending_delete_$noteId", false)
+                    }
+
                     dbRef.child("IsCompleted").get().addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val isCompleted = task.result?.getValue(Boolean::class.java) == true
-                            dbRef.child("IsCompleted").setValue(!isCompleted)
+                            // Verificar si se solicitó eliminar mientras obteníamos el dato
+                            val isPendingDelete = prefs.getBoolean("pending_delete_$noteId", false)
+                            
+                            if (!isPendingDelete) {
+                                val isCompleted = task.result?.getValue(Boolean::class.java) == true
+                                dbRef.child("IsCompleted").setValue(!isCompleted).addOnCompleteListener {
+                                    NoteWidget.updateWidget(context)
+                                }
+                            }
                         }
                     }
-                    prefs.edit { putLong("last_click_time_$noteId", currentTime) }
                 }
             }
         }
-        NoteWidget.updateWidget(context)
+        // NoteWidget.updateWidget(context) // Se llama dentro de los callbacks para asegurar consistencia
     }
 }

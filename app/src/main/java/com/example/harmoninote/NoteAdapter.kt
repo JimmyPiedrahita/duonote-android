@@ -1,6 +1,8 @@
 package com.example.harmoninote
 
 import android.graphics.Paint
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 class NoteAdapter(
     private val notes: List<Note>,
     private val onNoteClick: (Note) -> Unit,
+    private val onNoteDoubleClick: (Note) -> Unit,
     private val onCopyClick: (Note) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
     class NoteViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvNoteText: TextView = view.findViewById(R.id.tvNoteText)
         val btnCopyNote: ImageButton = view.findViewById(R.id.btnCopyNote)
+        var lastClickTime: Long = 0
+        val handler = Handler(Looper.getMainLooper())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -41,7 +46,16 @@ class NoteAdapter(
         }
 
         holder.itemView.setOnClickListener {
-            onNoteClick(note)
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - holder.lastClickTime < 500) {
+                holder.handler.removeCallbacksAndMessages(null)
+                onNoteDoubleClick(note)
+            } else {
+                holder.handler.postDelayed({
+                    onNoteClick(note)
+                }, 500)
+            }
+            holder.lastClickTime = currentTime
         }
 
         holder.btnCopyNote.setOnClickListener {
