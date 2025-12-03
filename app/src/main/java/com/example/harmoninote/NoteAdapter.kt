@@ -28,13 +28,16 @@ class NoteAdapter(
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notes[position]
         holder.tvNoteText.text = note.text
+        val cardView = holder.itemView as com.google.android.material.card.MaterialCardView
 
         if (note.isCompleted == true) {
             holder.tvNoteText.paintFlags = holder.tvNoteText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            holder.tvNoteText.alpha = 0.5f
+            holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.widget_text_completed))
+            cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.widget_background_completed))
         } else {
             holder.tvNoteText.paintFlags = holder.tvNoteText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            holder.tvNoteText.alpha = 1.0f
+            holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.widget_text_pending))
+            cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.widget_background_pending))
         }
 
         holder.itemView.setOnClickListener {
