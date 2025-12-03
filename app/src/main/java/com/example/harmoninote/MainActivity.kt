@@ -1,9 +1,13 @@
 package com.example.harmoninote
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -13,17 +17,29 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import com.google.firebase.database.FirebaseDatabase
 
 class MainActivity : AppCompatActivity() {
     private lateinit var btnScanQR: Button
     private lateinit var tvQRResult: TextView
+    private lateinit var rvNotes: RecyclerView
+    private lateinit var fabAddNote: FloatingActionButton
     private lateinit var qrDataStore: QRDataStore
+    private lateinit var noteAdapter: NoteAdapter
+    private val notesList = mutableListOf<Note>()
+    private var notesListener: ValueEventListener? = null
+    private var currentQrContent: String? = null
 
     // Launcher para solicitar permiso de cámara
     private val requestPermissionLauncher = registerForActivityResult(
@@ -77,12 +93,23 @@ class MainActivity : AppCompatActivity() {
         // Inicializar vistas
         btnScanQR = findViewById(R.id.btnScanQR)
         tvQRResult = findViewById(R.id.tvQRResult)
+        rvNotes = findViewById(R.id.rvNotes)
+        fabAddNote = findViewById(R.id.fabAddNote)
+
+        // Configurar RecyclerView
+        noteAdapter = NoteAdapter(notesList, 
+            onNoteClick = { note -> toggleNoteCompletion(note) },
+            onCopyClick = { note -> copyNoteText(note) }
+        )
+        rvNotes.layoutManager = LinearLayoutManager(this)
+        rvNotes.adapter = noteAdapter
 
         // Cargar el último QR escaneado si existe
         lifecycleScope.launch {
             qrDataStore.qrContent.collect { savedContent ->
                 savedContent?.let {
                     tvQRResult.text = "Último QR guardado: $it"
+                    loadNotes(it)
                 }
             }
         }
@@ -90,6 +117,12 @@ class MainActivity : AppCompatActivity() {
         // Configurar el botón de escaneo
         btnScanQR.setOnClickListener {
             checkCameraPermissionAndScan()
+        }
+
+        // Configurar FAB
+        fabAddNote.setOnClickListener {
+            val intent = Intent(this, DialogActivity::class.java)
+            startActivity(intent)
         }
 
         // Iniciar servicio de Firebase
@@ -102,11 +135,63 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadNotes(qrContent: String) {
+        if (currentQrContent == qrContent) return
+
+        // Remover listener anterior si existe
+        currentQrContent?.let { oldQr ->
+            notesListener?.let { listener ->
+                FirebaseDatabase.getInstance().getReference("Connections").child(oldQr).child("Notes")
+                    .removeEventListener(listener)
+            }
+        }
+
+        currentQrContent = qrContent
+        val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes")
+
+        notesListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                notesList.clear()
+                for (notaSnapshot in snapshot.children) {
+                    val text = notaSnapshot.child("Text").getValue(String::class.java)
+                    val id = notaSnapshot.key
+                    val timestamp = notaSnapshot.child("TimeStamp").getValue(Long::class.java)
+                    val isCompleted = notaSnapshot.child("IsCompleted").getValue(Boolean::class.java)
+                    notesList.add(Note(id, text, timestamp, isCompleted))
+                }
+                noteAdapter.notifyDataSetChanged()
+                fabAddNote.visibility = View.VISIBLE
+                rvNotes.visibility = View.VISIBLE
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(this@MainActivity, "Error al cargar notas: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+        dbRef.addValueEventListener(notesListener!!)
+    }
+
+    private fun toggleNoteCompletion(note: Note) {
+        val qrContent = currentQrContent ?: return
+        val noteId = note.id ?: return
+        val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes").child(noteId)
+        
+        dbRef.child("IsCompleted").setValue(!(note.isCompleted ?: false))
+    }
+
+    private fun copyNoteText(note: Note) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied note", note.text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "Nota copiada", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onResume() {
         super.onResume()
         // Asegurar que el servicio esté corriendo cuando la app vuelve al primer plano
         startFirebaseService()
     }
+
 
     private fun startFirebaseService() {
         val serviceIntent = Intent(this, FirebaseListenerService::class.java)

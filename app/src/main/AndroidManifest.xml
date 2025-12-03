@@ -28,7 +28,7 @@
         </activity>
         <activity
             android:name=".DialogActivity"
-            android:theme="@style/Theme.AppCompat.Dialog"
+            android:theme="@style/Theme.HarmoniNote.Dialog"
             android:exported="true"/>
         <receiver android:name=".NoteWidget" android:exported="true">
             <intent-filter>
