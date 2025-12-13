@@ -49,6 +49,7 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.zxing.android.embedded)
+    implementation(libs.play.services.code.scanner)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(platform(libs.firebase.bom))

@@ -25,9 +25,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanIntentResult
-import com.journeyapps.barcodescanner.ScanOptions
+import com.google.mlkit.vision.codescanner.GmsBarcodeScannerOptions
+import com.google.mlkit.vision.codescanner.GmsBarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -41,45 +41,40 @@ class MainActivity : AppCompatActivity() {
     private var notesListener: ValueEventListener? = null
     private var currentQrContent: String? = null
 
-    // Launcher para solicitar permiso de cámara
+    // Launcher para solicitar permiso de cámara (No es estrictamente necesario para GmsBarcodeScanning, pero se mantiene por si acaso)
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
             startQRScanner()
         } else {
-            Toast.makeText(this, "Permiso de cámara necesario para escanear QR", Toast.LENGTH_LONG).show()
+            // GmsBarcodeScanning maneja sus propios permisos, intentamos escanear de todos modos
+            startQRScanner()
         }
     }
 
-    // Launcher para el escáner de QR
-    private val qrScannerLauncher = registerForActivityResult(ScanContract()) { result: ScanIntentResult ->
-        if (result.contents == null) {
-            Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
-        } else {
-            val qrContent = result.contents
-            tvQRResult.text = "Resultado: $qrContent"
-            Toast.makeText(this, "Código QR escaneado: $qrContent", Toast.LENGTH_LONG).show()
+    private fun handleQrResult(qrContent: String) {
+        tvQRResult.text = "Resultado: $qrContent"
+        Toast.makeText(this, "Código QR escaneado: $qrContent", Toast.LENGTH_LONG).show()
 
-            // Guardar en DataStore
-            lifecycleScope.launch {
-                qrDataStore.saveQRContent(qrContent)
-                Toast.makeText(this@MainActivity, "QR guardado en DataStore", Toast.LENGTH_SHORT).show()
-            }
-
-            // Actualizar sesion_activa en Firebase Realtime Database
-            val database = FirebaseDatabase.getInstance()
-            val sessionRef = database.getReference("Connections").child(qrContent).child("sesion_activa")
-            sessionRef.setValue(true)
-                .addOnSuccessListener {
-                    Toast.makeText(this@MainActivity, "Sesión activada en Firebase", Toast.LENGTH_SHORT).show()
-                    // Reiniciar el servicio para que escuche el nuevo QR
-                    restartFirebaseService()
-                }
-                .addOnFailureListener { exception ->
-                    Toast.makeText(this@MainActivity, "Error al activar sesión: ${exception.message}", Toast.LENGTH_SHORT).show()
-                }
+        // Guardar en DataStore
+        lifecycleScope.launch {
+            qrDataStore.saveQRContent(qrContent)
+            Toast.makeText(this@MainActivity, "QR guardado en DataStore", Toast.LENGTH_SHORT).show()
         }
+
+        // Actualizar sesion_activa en Firebase Realtime Database
+        val database = FirebaseDatabase.getInstance()
+        val sessionRef = database.getReference("Connections").child(qrContent).child("sesion_activa")
+        sessionRef.setValue(true)
+            .addOnSuccessListener {
+                Toast.makeText(this@MainActivity, "Sesión activada en Firebase", Toast.LENGTH_SHORT).show()
+                // Reiniciar el servicio para que escuche el nuevo QR
+                restartFirebaseService()
+            }
+            .addOnFailureListener { exception ->
+                Toast.makeText(this@MainActivity, "Error al activar sesión: ${exception.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -224,30 +219,34 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkCameraPermissionAndScan() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // Permiso ya otorgado, iniciar escáner
-                startQRScanner()
-            }
-            else -> {
-                // Solicitar permiso
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-        }
+        // GmsBarcodeScanning maneja los permisos automáticamente, pero mantenemos la verificación por buenas prácticas
+        // o si decidimos volver a una implementación manual.
+        // Para GmsBarcodeScanning, simplemente llamamos a startQRScanner()
+        startQRScanner()
     }
 
     private fun startQRScanner() {
-        val options = ScanOptions()
-        options.setDesiredBarcodeFormats(ScanOptions.QR_CODE)
-        options.setPrompt("Escanea un código QR")
-        options.setCameraId(0)  // Usar cámara trasera
-        options.setBeepEnabled(true)
-        options.setBarcodeImageEnabled(true)
-        options.setOrientationLocked(true)
+        val options = GmsBarcodeScannerOptions.Builder()
+            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+            .enableAutoZoom() // Habilitar auto-zoom para mejorar la detección
+            .build()
 
-        qrScannerLauncher.launch(options)
+        val scanner = GmsBarcodeScanning.getClient(this, options)
+
+        scanner.startScan()
+            .addOnSuccessListener { barcode ->
+                val rawValue = barcode.rawValue
+                if (rawValue != null) {
+                    handleQrResult(rawValue)
+                } else {
+                    Toast.makeText(this, "No se pudo leer el contenido del QR", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnCanceledListener {
+                Toast.makeText(this, "Escaneo cancelado", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al escanear: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

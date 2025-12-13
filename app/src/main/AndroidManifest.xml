@@ -30,6 +30,12 @@
             android:name=".DialogActivity"
             android:theme="@style/Theme.HarmoniNote.Dialog"
             android:exported="true"/>
+        <activity
+            android:name=".PortraitCaptureActivity"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:theme="@style/Theme.HarmoniNote"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <receiver android:name=".NoteWidget" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>

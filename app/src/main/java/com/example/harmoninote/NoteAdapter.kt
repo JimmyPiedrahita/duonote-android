@@ -3,7 +3,11 @@ package com.example.harmoninote
 import android.graphics.Paint
 import android.os.Handler
 import android.os.Looper
+import android.text.Spanned
+import android.text.style.ClickableSpan
+import android.text.util.Linkify
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -33,6 +37,43 @@ class NoteAdapter(
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notes[position]
         holder.tvNoteText.text = note.text
+
+        // Detectar links y permitir navegación sin interferir con el click del item
+        Linkify.addLinks(holder.tvNoteText, Linkify.WEB_URLS)
+        holder.tvNoteText.movementMethod = null // Deshabilitar el método de movimiento predeterminado
+
+        holder.tvNoteText.setOnTouchListener { v, event ->
+            val textView = v as TextView
+            val text = textView.text
+            if (text is Spanned) {
+                val action = event.action
+                if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {
+                    var x = event.x.toInt()
+                    var y = event.y.toInt()
+
+                    x -= textView.totalPaddingLeft
+                    y -= textView.totalPaddingTop
+
+                    x += textView.scrollX
+                    y += textView.scrollY
+
+                    val layout = textView.layout
+                    val line = layout.getLineForVertical(y)
+                    val off = layout.getOffsetForHorizontal(line, x.toFloat())
+
+                    val link = text.getSpans(off, off, ClickableSpan::class.java)
+
+                    if (link.isNotEmpty()) {
+                        if (action == MotionEvent.ACTION_UP) {
+                            link[0].onClick(textView)
+                        }
+                        return@setOnTouchListener true
+                    }
+                }
+            }
+            return@setOnTouchListener false
+        }
+
         val cardView = holder.itemView as com.google.android.material.card.MaterialCardView
 
         if (note.isCompleted == true) {
