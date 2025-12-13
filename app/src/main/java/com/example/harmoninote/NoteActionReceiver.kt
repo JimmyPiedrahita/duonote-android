@@ -13,9 +13,17 @@ import kotlinx.coroutines.flow.first
 
 class NoteActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val noteId = intent.getStringExtra("NOTE_ID") ?: return
+        val noteId = intent.getStringExtra("NOTE_ID")
 
         when (intent.action) {
+            "ACTION_OPEN_LINK" -> {
+                val url = intent.getStringExtra("NOTE_URL")
+                if (url != null) {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(browserIntent)
+                }
+            }
             "ACTION_COPY_TEXT" -> {
                 val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val textNoteCopy = intent.getStringExtra("NOTE_TEXT")
@@ -24,6 +32,7 @@ class NoteActionReceiver : BroadcastReceiver() {
                 Toast.makeText(context, "Copied text", Toast.LENGTH_SHORT).show()
             }
             else -> {
+                if (noteId == null) return
                 // Obtener el valor del QR desde DataStore
                 val qrDataStore = QRDataStore(context)
                 val contentQR = runBlocking {

@@ -27,6 +27,16 @@
             android:paddingEnd="8dp"/>
 
         <ImageButton
+            android:id="@+id/btnOpenLink"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Open Link"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_link"
+            app:tint="?attr/colorOnSurfaceVariant"
+            android:visibility="gone"/>
+
+        <ImageButton
             android:id="@+id/btnCopyNote"
             android:layout_width="40dp"
             android:layout_height="40dp"

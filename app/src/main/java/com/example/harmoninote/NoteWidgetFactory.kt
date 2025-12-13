@@ -2,6 +2,8 @@ package com.example.harmoninote
 
 import android.content.Context
 import android.content.Intent
+import android.util.Patterns
+import android.view.View
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService.RemoteViewsFactory
 import com.google.firebase.database.DataSnapshot
@@ -85,6 +87,20 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
             putExtra("NOTE_ID", note.id)
             putExtra("NOTE_TEXT",note.text)
             action = "ACTION_COPY_TEXT"
+        }
+
+        // Detectar link
+        val matcher = Patterns.WEB_URL.matcher(note.text ?: "")
+        if (matcher.find()) {
+            val url = matcher.group()
+            views.setViewVisibility(R.id.note_item_link, View.VISIBLE)
+            val fillInIntentLink = Intent().apply {
+                putExtra("NOTE_URL", url)
+                action = "ACTION_OPEN_LINK"
+            }
+            views.setOnClickFillInIntent(R.id.note_item_link, fillInIntentLink)
+        } else {
+            views.setViewVisibility(R.id.note_item_link, View.GONE)
         }
 
         views.setOnClickFillInIntent(R.id.note_item_button, fillInIntentButton)

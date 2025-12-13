@@ -46,7 +46,7 @@ class NoteWidget : AppWidgetProvider() {
             val clickIntent = Intent(context, NoteActionReceiver::class.java)
 
             val broadcastFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE
             } else {
                 PendingIntent.FLAG_UPDATE_CURRENT
             }

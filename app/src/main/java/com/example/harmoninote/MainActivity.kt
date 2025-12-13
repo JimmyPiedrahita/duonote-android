@@ -168,24 +168,50 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun deleteNote(note: Note) {
-        val qrContent = currentQrContent ?: return
-        val noteId = note.id ?: return
-        val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes").child(noteId)
-        dbRef.removeValue()
-            .addOnSuccessListener {
-                Toast.makeText(this, "Nota eliminada", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Error al eliminar nota", Toast.LENGTH_SHORT).show()
-            }
+        val index = notesList.indexOfFirst { it.id == note.id }
+        if (index != -1) {
+            // Actualización optimista: Eliminar de la lista localmente
+            notesList.removeAt(index)
+            noteAdapter.notifyItemRemoved(index)
+
+            val qrContent = currentQrContent ?: return
+            val noteId = note.id ?: return
+            val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes").child(noteId)
+            dbRef.removeValue()
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Nota eliminada", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener {
+                    // Revertir cambios si falla (recargar todo es más seguro aquí)
+                    Toast.makeText(this, "Error al eliminar nota", Toast.LENGTH_SHORT).show()
+                    loadNotes(qrContent)
+                }
+        }
     }
 
     private fun toggleNoteCompletion(note: Note) {
-        val qrContent = currentQrContent ?: return
-        val noteId = note.id ?: return
-        val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes").child(noteId)
-        
-        dbRef.child("IsCompleted").setValue(!(note.isCompleted ?: false))
+        val index = notesList.indexOfFirst { it.id == note.id }
+        if (index != -1) {
+            // Actualización optimista: Cambiar estado localmente
+            val newStatus = !(note.isCompleted ?: false)
+            val updatedNote = note.copy(isCompleted = newStatus)
+            notesList[index] = updatedNote
+            noteAdapter.notifyItemChanged(index)
+
+            val qrContent = currentQrContent ?: return
+            val noteId = note.id ?: return
+            val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes").child(noteId)
+            
+            dbRef.child("IsCompleted").setValue(newStatus)
+                .addOnFailureListener {
+                    // Revertir cambios si falla
+                    if (index < notesList.size && notesList[index].id == noteId) {
+                        notesList[index] = note // Volver al estado anterior
+                        noteAdapter.notifyItemChanged(index)
+                    }
+                    Toast.makeText(this, "Error al actualizar estado", Toast.LENGTH_SHORT).show()
+                }
+        }
     }
 
     private fun copyNoteText(note: Note) {

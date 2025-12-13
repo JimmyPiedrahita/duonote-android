@@ -19,6 +19,19 @@
         android:layout_margin="0dp"/>
 
     <ImageButton
+        android:id="@+id/note_item_link"
+        android:layout_width="10dp"
+        android:layout_height="match_parent"
+        android:contentDescription="Open Link"
+        android:textColor="@color/white"
+        android:layout_weight="1"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:background="@drawable/bg_ripple_add_note"
+        android:src="@drawable/ic_link"
+        android:visibility="gone"/>
+
+    <ImageButton
         android:id="@+id/note_item_button"
         android:layout_width="10dp"
         android:layout_height="match_parent"
