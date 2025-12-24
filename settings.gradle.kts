@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HarmoniNote"
+rootProject.name = "DuoNote"
 include(":app")

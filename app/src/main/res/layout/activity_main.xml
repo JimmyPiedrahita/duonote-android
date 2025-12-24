@@ -17,7 +17,7 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="HarmoniNote"
+            app:title="DuoNote"
             app:titleCentered="true"
             app:titleTextColor="?attr/colorOnSurface"
             android:elevation="0dp" />

@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.harmoninote"
+    namespace = "com.example.duonote"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.harmoninote"
+        applicationId = "com.example.duonote"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -40,18 +40,28 @@ android {
 }
 
 dependencies {
+    // CameraX
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.mlkit.vision)
+    
+    // ML Kit Barcode Scanning (Bundled)
+    implementation(libs.barcode.scanning)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.zxing.android.embedded)
-    implementation(libs.play.services.code.scanner)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    
+    // Firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.database)
+    
+    // Testing
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }

@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.HarmoniNote" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.DuoNote" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
@@ -26,9 +26,9 @@
         <item name="colorOutline">@color/md_theme_dark_outline</item>
     </style>
 
-    <style name="Theme.HarmoniNote" parent="Base.Theme.HarmoniNote" />
+    <style name="Theme.DuoNote" parent="Base.Theme.DuoNote" />
 
-    <style name="Theme.HarmoniNote.Dialog" parent="Theme.Material3.DayNight.Dialog">
+    <style name="Theme.DuoNote.Dialog" parent="Theme.Material3.DayNight.Dialog">
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
