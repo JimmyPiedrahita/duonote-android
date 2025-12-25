@@ -1,18 +1,19 @@
 package com.example.duonote
 
-import android.Manifest
+import android.appwidget.AppWidgetManager
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -25,60 +26,21 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var btnScanQR: Button
-    private lateinit var tvQRResult: TextView
     private lateinit var rvNotes: RecyclerView
     private lateinit var fabAddNote: FloatingActionButton
+    private lateinit var btnAddWidget: ImageButton
+    private lateinit var btnLogout: ImageButton
+    private lateinit var emptyState: LinearLayout
+    private lateinit var progressBar: ProgressBar
     private lateinit var qrDataStore: QRDataStore
     private lateinit var noteAdapter: NoteAdapter
     private val notesList = mutableListOf<Note>()
     private var notesListener: ValueEventListener? = null
     private var currentQrContent: String? = null
-
-    private val qrScannerLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val qrContent = result.data?.getStringExtra(QRScannerActivity.EXTRA_QR_RESULT)
-            if (qrContent != null) {
-                handleQrResult(qrContent)
-            }
-        }
-    }
-
-    private val requestPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { isGranted: Boolean ->
-        if (isGranted) {
-            startQRScanner()
-        } else {
-            Toast.makeText(this, "Se requiere permiso de cámara para escanear QR", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun handleQrResult(qrContent: String) {
-        tvQRResult.text = "Resultado: $qrContent"
-        Toast.makeText(this, "Código QR escaneado: $qrContent", Toast.LENGTH_LONG).show()
-
-        lifecycleScope.launch {
-            qrDataStore.saveQRContent(qrContent)
-            Toast.makeText(this@MainActivity, "QR guardado", Toast.LENGTH_SHORT).show()
-        }
-
-        val database = FirebaseDatabase.getInstance()
-        val sessionRef = database.getReference("Connections").child(qrContent).child("sesion_activa")
-        sessionRef.setValue(true)
-            .addOnSuccessListener {
-                Toast.makeText(this@MainActivity, "Sesión activada en Firebase", Toast.LENGTH_SHORT).show()
-                restartFirebaseService()
-            }
-            .addOnFailureListener { exception ->
-                Toast.makeText(this@MainActivity, "Error al activar sesión: ${exception.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,10 +49,33 @@ class MainActivity : AppCompatActivity() {
 
         qrDataStore = QRDataStore(this)
 
-        btnScanQR = findViewById(R.id.btnScanQR)
-        tvQRResult = findViewById(R.id.tvQRResult)
+        // Check if user is logged in
+        lifecycleScope.launch {
+            val savedCode = qrDataStore.qrContent.first()
+            if (savedCode.isNullOrEmpty()) {
+                // Not logged in, redirect to login
+                navigateToLogin()
+                return@launch
+            }
+            
+            initViews()
+            loadNotes(savedCode)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+    }
+
+    private fun initViews() {
         rvNotes = findViewById(R.id.rvNotes)
         fabAddNote = findViewById(R.id.fabAddNote)
+        btnAddWidget = findViewById(R.id.btnAddWidget)
+        btnLogout = findViewById(R.id.btnLogout)
+        emptyState = findViewById(R.id.emptyState)
+        progressBar = findViewById(R.id.progressBar)
 
         noteAdapter = NoteAdapter(notesList, 
             onNoteClick = { note -> toggleNoteCompletion(note) },
@@ -100,31 +85,72 @@ class MainActivity : AppCompatActivity() {
         rvNotes.layoutManager = LinearLayoutManager(this)
         rvNotes.adapter = noteAdapter
 
-        lifecycleScope.launch {
-            qrDataStore.qrContent.collect { savedContent ->
-                savedContent?.let {
-                    tvQRResult.text = "Último QR guardado: $it"
-                    loadNotes(it)
-                }
-            }
-        }
-
-        btnScanQR.setOnClickListener {
-            checkCameraPermissionAndScan()
-        }
-
         fabAddNote.setOnClickListener {
             val intent = Intent(this, DialogActivity::class.java)
             startActivity(intent)
         }
 
-        startFirebaseService()
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        btnAddWidget.setOnClickListener {
+            addWidgetToHomeScreen()
         }
+
+        btnLogout.setOnClickListener {
+            showLogoutConfirmation()
+        }
+
+        startFirebaseService()
+    }
+
+    private fun addWidgetToHomeScreen() {
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val widgetProvider = ComponentName(this, NoteWidget::class.java)
+
+        if (appWidgetManager.isRequestPinAppWidgetSupported) {
+            appWidgetManager.requestPinAppWidget(widgetProvider, null, null)
+            Toast.makeText(this, "Sigue las instrucciones para agregar el widget", Toast.LENGTH_LONG).show()
+        } else {
+            // Fallback for older devices
+            Toast.makeText(this, "Para agregar el widget, mantén presionado en la pantalla de inicio y selecciona Widgets > DuoNote", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun showLogoutConfirmation() {
+        AlertDialog.Builder(this, R.style.AlertDialogTheme)
+            .setTitle("Cerrar Sesión")
+            .setMessage("¿Estás seguro de que deseas cerrar sesión? Tendrás que escanear el código QR nuevamente para conectarte.")
+            .setPositiveButton("Cerrar Sesión") { _, _ ->
+                logout()
+            }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun logout() {
+        lifecycleScope.launch {
+            // Deactivate session in Firebase
+            currentQrContent?.let { qrContent ->
+                val database = FirebaseDatabase.getInstance()
+                val sessionRef = database.getReference("Connections").child(qrContent).child("sesion_activa")
+                sessionRef.setValue(false)
+            }
+
+            // Clear local data
+            qrDataStore.clearQRContent()
+            
+            // Stop Firebase service
+            val serviceIntent = Intent(this@MainActivity, FirebaseListenerService::class.java)
+            stopService(serviceIntent)
+
+            // Navigate to login
+            navigateToLogin()
+        }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun loadNotes(qrContent: String) {
@@ -138,6 +164,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         currentQrContent = qrContent
+        progressBar.visibility = View.VISIBLE
+        
         val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(qrContent).child("Notes")
 
         notesListener = object : ValueEventListener {
@@ -151,11 +179,22 @@ class MainActivity : AppCompatActivity() {
                     notesList.add(Note(id, text, timestamp, isCompleted))
                 }
                 noteAdapter.notifyDataSetChanged()
+                
+                progressBar.visibility = View.GONE
                 fabAddNote.visibility = View.VISIBLE
-                rvNotes.visibility = View.VISIBLE
+                
+                // Show/hide empty state
+                if (notesList.isEmpty()) {
+                    emptyState.visibility = View.VISIBLE
+                    rvNotes.visibility = View.GONE
+                } else {
+                    emptyState.visibility = View.GONE
+                    rvNotes.visibility = View.VISIBLE
+                }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                progressBar.visibility = View.GONE
                 Toast.makeText(this@MainActivity, "Error al cargar notas: ${error.message}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -174,6 +213,7 @@ class MainActivity : AppCompatActivity() {
             dbRef.removeValue()
                 .addOnSuccessListener {
                     Toast.makeText(this, "Nota eliminada", Toast.LENGTH_SHORT).show()
+                    updateEmptyState()
                 }
                 .addOnFailureListener {
                     Toast.makeText(this, "Error al eliminar nota", Toast.LENGTH_SHORT).show()
@@ -212,6 +252,16 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this, "Nota copiada", Toast.LENGTH_SHORT).show()
     }
 
+    private fun updateEmptyState() {
+        if (notesList.isEmpty()) {
+            emptyState.visibility = View.VISIBLE
+            rvNotes.visibility = View.GONE
+        } else {
+            emptyState.visibility = View.GONE
+            rvNotes.visibility = View.VISIBLE
+        }
+    }
+
     override fun onResume() {
         super.onResume()
         startFirebaseService()
@@ -220,33 +270,5 @@ class MainActivity : AppCompatActivity() {
     private fun startFirebaseService() {
         val serviceIntent = Intent(this, FirebaseListenerService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
-    }
-
-    private fun restartFirebaseService() {
-        val serviceIntent = Intent(this, FirebaseListenerService::class.java)
-        stopService(serviceIntent)
-
-        android.os.Handler(mainLooper).postDelayed({
-            ContextCompat.startForegroundService(this, serviceIntent)
-        }, 500)
-    }
-
-    private fun checkCameraPermissionAndScan() {
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                startQRScanner()
-            }
-            else -> {
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
-            }
-        }
-    }
-
-    private fun startQRScanner() {
-        val intent = Intent(this, QRScannerActivity::class.java)
-        qrScannerLauncher.launch(intent)
     }
 }

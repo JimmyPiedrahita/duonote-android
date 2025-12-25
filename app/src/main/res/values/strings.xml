@@ -3,4 +3,22 @@
     <string name="tittle_widget">Notes</string>
     <string name="description_button_add">Button to add a note</string>
     <string name="description_button_copy">Button to copy the text of the note</string>
+    <string name="scan_qr_title">Escanear Código QR</string>
+    <string name="scan_qr_description">Escanea el código QR desde la app de escritorio</string>
+    <string name="open_scanner">Abrir Escáner</string>
+    <string name="manual_code_title">Ingresar código manualmente</string>
+    <string name="manual_code_description">Introduce el código de conexión</string>
+    <string name="code_hint">Código de conexión</string>
+    <string name="connect">Conectar</string>
+    <string name="connecting">Conectando...</string>
+    <string name="connection_success">¡Conectado!</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="logout_title">Cerrar Sesión</string>
+    <string name="logout_message">¿Estás seguro de que deseas cerrar sesión? Tendrás que escanear el código QR nuevamente para conectarte.</string>
+    <string name="cancel">Cancelar</string>
+    <string name="add_widget">Agregar Widget</string>
+    <string name="add_widget_instructions">Sigue las instrucciones para agregar el widget</string>
+    <string name="add_widget_manual">Para agregar el widget, mantén presionado en la pantalla de inicio y selecciona Widgets > DuoNote</string>
+    <string name="no_notes">No hay notas</string>
+    <string name="no_notes_description">Agrega notas desde la app de escritorio</string>
 </resources>

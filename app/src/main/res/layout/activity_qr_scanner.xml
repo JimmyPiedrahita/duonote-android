@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@color/background_dark"
     tools:context=".QRScannerActivity">
 
     <androidx.camera.view.PreviewView
@@ -17,7 +17,7 @@
         android:id="@+id/overlayTop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#80000000"
+        android:background="#80050a0a"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/scanFrame" />
 
@@ -25,7 +25,7 @@
         android:id="@+id/overlayBottom"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#80000000"
+        android:background="#80050a0a"
         app:layout_constraintTop_toBottomOf="@id/scanFrame"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -33,7 +33,7 @@
         android:id="@+id/overlayLeft"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#80000000"
+        android:background="#80050a0a"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/scanFrame"
         app:layout_constraintTop_toBottomOf="@id/overlayTop"
@@ -43,7 +43,7 @@
         android:id="@+id/overlayRight"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#80000000"
+        android:background="#80050a0a"
         app:layout_constraintStart_toEndOf="@id/scanFrame"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/overlayTop"
@@ -66,7 +66,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Apunta al código QR"
-        android:textColor="@android:color/white"
+        android:textColor="@color/text_primary"
         android:textSize="16sp"
         android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/scanFrame"
@@ -81,8 +81,9 @@
         android:text="Cancelar"
         android:layout_marginBottom="32dp"
         style="@style/Widget.Material3.Button.OutlinedButton"
-        app:strokeColor="@android:color/white"
-        android:textColor="@android:color/white"
+        app:strokeColor="@color/text_primary"
+        android:textColor="@color/text_primary"
+        app:cornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

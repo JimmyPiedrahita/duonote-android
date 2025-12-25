@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
@@ -24,6 +25,7 @@ class NoteAdapter(
         val tvNoteText: TextView = view.findViewById(R.id.tvNoteText)
         val btnCopyNote: ImageButton = view.findViewById(R.id.btnCopyNote)
         val btnOpenLink: ImageButton = view.findViewById(R.id.btnOpenLink)
+        val noteContainer: LinearLayout = view.findViewById(R.id.noteContainer)
         var lastClickTime: Long = 0
         val handler = Handler(Looper.getMainLooper())
     }
@@ -55,19 +57,18 @@ class NoteAdapter(
         holder.tvNoteText.isClickable = false
         holder.tvNoteText.isLongClickable = false
 
-        val cardView = holder.itemView as com.google.android.material.card.MaterialCardView
-
+        // Apply styles based on completion status
         if (note.isCompleted == true) {
             holder.tvNoteText.paintFlags = holder.tvNoteText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.widget_text_completed))
-            cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.widget_background_completed))
+            holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.note_completed_text))
+            holder.noteContainer.setBackgroundResource(R.drawable.bg_note_card_completed)
         } else {
             holder.tvNoteText.paintFlags = holder.tvNoteText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.widget_text_pending))
-            cardView.setCardBackgroundColor(holder.itemView.context.getColor(R.color.widget_background_pending))
+            holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.text_primary))
+            holder.noteContainer.setBackgroundResource(R.drawable.bg_note_card)
         }
 
-        holder.itemView.setOnClickListener {
+        holder.noteContainer.setOnClickListener {
             handleItemClick(holder, note)
         }
 

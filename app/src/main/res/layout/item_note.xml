@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    app:cardBackgroundColor="?attr/colorSurfaceVariant"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    android:layout_marginVertical="4dp">
 
     <LinearLayout
+        android:id="@+id/noteContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="12dp"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_note_card">
 
         <TextView
             android:id="@+id/tvNoteText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnSurfaceVariant"
+            android:textSize="14sp"
+            android:textColor="@color/text_primary"
+            android:lineSpacingMultiplier="1.4"
             android:paddingEnd="8dp"/>
 
         <ImageButton
             android:id="@+id/btnOpenLink"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:contentDescription="Open Link"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_link"
-            app:tint="?attr/colorOnSurfaceVariant"
-            android:visibility="gone"/>
+            app:tint="@color/text_secondary"
+            android:visibility="gone"
+            android:layout_marginEnd="4dp"/>
 
         <ImageButton
             android:id="@+id/btnCopyNote"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:contentDescription="Copy Note"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_copy_text"
-            app:tint="?attr/colorOnSurfaceVariant"/>
+            app:tint="@color/text_secondary"/>
 
     </LinearLayout>
 
-</com.google.android.material.card.MaterialCardView>
+</FrameLayout>
