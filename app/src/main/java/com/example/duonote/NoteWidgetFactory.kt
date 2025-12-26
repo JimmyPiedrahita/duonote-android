@@ -36,7 +36,7 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
                 for (notaSnapshot in snapshot.children) {
                     val text = notaSnapshot.child("Text").getValue(String::class.java)
                     val id = notaSnapshot.key
-                    val timestamp = notaSnapshot.child("TimeStamp").getValue(Long::class.java)
+                    val timestamp = notaSnapshot.child("Timestamp").getValue(Long::class.java)
                     val isCompleted = notaSnapshot.child("IsCompleted").getValue(Boolean::class.java)
                     listNotes.add(Note(id, text, timestamp, isCompleted))
                 }
