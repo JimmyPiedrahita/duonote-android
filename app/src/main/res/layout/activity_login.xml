@@ -101,7 +101,7 @@
                         android:textColor="@color/text_primary"
                         app:backgroundTint="@color/button_background"
                         app:cornerRadius="12dp"
-                        app:icon="@android:drawable/ic_menu_camera"
+                        app:icon="@drawable/ic_menu_camera"
                         app:iconGravity="textStart"
                         app:iconTint="@color/text_primary" />
 

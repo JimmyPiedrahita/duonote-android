@@ -107,7 +107,6 @@ class MainActivity : AppCompatActivity() {
 
         if (appWidgetManager.isRequestPinAppWidgetSupported) {
             appWidgetManager.requestPinAppWidget(widgetProvider, null, null)
-            Toast.makeText(this, "Sigue las instrucciones para agregar el widget", Toast.LENGTH_LONG).show()
         } else {
             // Fallback for older devices
             Toast.makeText(this, "Para agregar el widget, mantén presionado en la pantalla de inicio y selecciona Widgets > DuoNote", Toast.LENGTH_LONG).show()

@@ -9,17 +9,20 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
+        android:id="@+id/header_widget"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_widget_item"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="20sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:textColor="@color/text_primary"
             android:text="@string/tittle_widget"
@@ -31,7 +34,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:src="@drawable/ic_add_notes"
-            android:background="@drawable/bg_ripple_add_note"
+            android:background="@drawable/bg_ripple_widget_note"
             android:contentDescription="@string/description_button_add"
             android:scaleType="centerInside"
             android:padding="6dp"

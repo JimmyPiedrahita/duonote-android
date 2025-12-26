@@ -17,7 +17,6 @@
             android:id="@+id/headerCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/card_background"
             app:cardCornerRadius="0dp"
             app:cardElevation="0dp"
             app:strokeWidth="0dp"
@@ -37,7 +36,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="DuoNote"
+                    android:text="Mis Notas"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary" />
@@ -95,12 +94,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📝"
-                android:textSize="48sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="No hay notas"
                 android:textSize="18sp"
@@ -110,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Agrega notas desde la app de escritorio"
+                android:text="Agrega tu primera nota desde el boton inferior derecho"
                 android:textSize="14sp"
                 android:textColor="@color/text_secondary" />
 
@@ -136,7 +129,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@android:drawable/ic_input_add"
+        android:src="@drawable/ic_input_add"
         android:contentDescription="Add Note"
         app:backgroundTint="@color/accent_blue"
         app:tint="@color/white"
