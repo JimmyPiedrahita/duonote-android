@@ -15,7 +15,8 @@
         android:dividerHeight="6dp"
         android:scrollbars="none"
         android:divider="@color/transparent"
-        android:listSelector="@color/transparent"/>
+        android:listSelector="@color/transparent"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:id="@+id/header_widget"
@@ -25,14 +26,15 @@
         android:gravity="center_vertical|end"
         android:background="@drawable/bg_widget_item"
         android:padding="10dp"
-        android:layout_marginTop="6dp">
+        android:layout_marginTop="6dp"
+        android:layout_weight="0">
 
         <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_add_notes"
-            android:background="@drawable/bg_ripple_add_note"
+            android:background="@drawable/bg_ripple_widget_note"
             android:contentDescription="@string/description_button_add"
             android:scaleType="centerInside"
             android:padding="4dp"
