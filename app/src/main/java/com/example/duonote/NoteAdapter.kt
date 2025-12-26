@@ -42,11 +42,20 @@ class NoteAdapter(
 
         val matcher = Patterns.WEB_URL.matcher(note.text ?: "")
         if (matcher.find()) {
-            val url = matcher.group()
+            var url = matcher.group() ?: ""
+            // Ensure URL has a scheme
+            if (url.isNotEmpty() && !url.startsWith("http://") && !url.startsWith("https://")) {
+                url = "https://$url"
+            }
             holder.btnOpenLink.visibility = View.VISIBLE
+            val finalUrl = url
             holder.btnOpenLink.setOnClickListener {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                holder.itemView.context.startActivity(intent)
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(finalUrl))
+                    holder.itemView.context.startActivity(intent)
+                } catch (e: Exception) {
+                    // Handle case where no browser is available
+                }
             }
         } else {
             holder.btnOpenLink.visibility = View.GONE

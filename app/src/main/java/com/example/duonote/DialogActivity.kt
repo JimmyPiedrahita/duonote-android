@@ -20,6 +20,12 @@ class DialogActivity : AppCompatActivity() {
 
         val editText = findViewById<EditText>(R.id.edit_note)
         val btnAdd = findViewById<Button>(R.id.btn_add_note)
+        val btnCancel = findViewById<Button>(R.id.btn_cancel)
+        
+        btnCancel.setOnClickListener {
+            finish()
+        }
+        
         btnAdd.setOnClickListener {
             val noteText = editText.text.toString().trim()
             if (noteText.isNotEmpty()) {

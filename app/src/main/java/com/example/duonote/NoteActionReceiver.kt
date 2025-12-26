@@ -17,11 +17,19 @@ class NoteActionReceiver : BroadcastReceiver() {
 
         when (intent.action) {
             "ACTION_OPEN_LINK" -> {
-                val url = intent.getStringExtra("NOTE_URL")
-                if (url != null) {
-                    val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
-                    browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(browserIntent)
+                var url = intent.getStringExtra("NOTE_URL")
+                if (!url.isNullOrEmpty()) {
+                    // Ensure URL has a scheme
+                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
+                        url = "https://$url"
+                    }
+                    try {
+                        val browserIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(url))
+                        browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(browserIntent)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, "No se pudo abrir el enlace", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             "ACTION_COPY_TEXT" -> {
