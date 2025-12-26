@@ -8,6 +8,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ListView
+        android:id="@+id/widget_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:dividerHeight="4dp"
+        android:scrollbars="none"
+        android:divider="@color/transparent"
+        android:listSelector="@color/transparent"/>
+
     <LinearLayout
         android:id="@+id/header_widget"
         android:layout_width="match_parent"
@@ -40,14 +50,4 @@
             android:padding="6dp"
         />
     </LinearLayout>
-
-    <ListView
-        android:id="@+id/widget_list_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:dividerHeight="4dp"
-        android:scrollbars="none"
-        android:divider="@color/transparent"
-        android:listSelector="@color/transparent"/>
 </LinearLayout>

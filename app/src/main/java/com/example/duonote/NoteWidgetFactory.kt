@@ -40,6 +40,8 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
                     val isCompleted = notaSnapshot.child("IsCompleted").getValue(Boolean::class.java)
                     listNotes.add(Note(id, text, timestamp, isCompleted))
                 }
+                // Sort by timestamp descending (newest first)
+                listNotes.sortByDescending { it.timestamp ?: 0L }
                 latch.countDown()
             }
 
@@ -63,7 +65,7 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         } else {
             R.drawable.bg_ripple_note_pending
         }
-        views.setInt(R.id.note_item_text, "setBackgroundResource", backgroundResId)
+        views.setInt(R.id.widget_item_container, "setBackgroundResource", backgroundResId)
         
         if (note.isCompleted == true) {
             views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.widget_text_completed))

@@ -30,7 +30,12 @@
 
     <style name="Theme.DuoNote" parent="Base.Theme.DuoNote" />
 
-    <style name="Theme.DuoNote.Dialog" parent="Theme.Material3.DayNight.Dialog">
+    <style name="Theme.DuoNote.Dialog" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowMinWidthMajor">100%</item>
+        <item name="android:windowMinWidthMinor">100%</item>
         <item name="colorPrimary">@color/md_theme_dark_primary</item>
         <item name="colorOnPrimary">@color/md_theme_dark_onPrimary</item>
         <item name="colorPrimaryContainer">@color/md_theme_dark_primaryContainer</item>
