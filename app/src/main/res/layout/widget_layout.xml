@@ -30,6 +30,18 @@
         android:layout_weight="0">
 
         <ImageButton
+            android:id="@+id/refreshButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_refresh_widget"
+            android:background="@drawable/bg_ripple_widget_note"
+            android:contentDescription="Refresh notes"
+            android:scaleType="centerInside"
+            android:padding="4dp"
+            android:layout_marginEnd="8dp"
+        />
+
+        <ImageButton
             android:id="@+id/imageButton"
             android:layout_width="32dp"
             android:layout_height="32dp"

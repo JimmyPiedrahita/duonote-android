@@ -40,6 +40,25 @@ class NoteWidget : AppWidgetProvider() {
                 pendingIntentFlags
             )
             views.setOnClickPendingIntent(R.id.imageButton, pendingIntent)
+
+            // Refresh button setup
+            val refreshIntent = Intent(context, NoteWidget::class.java).apply {
+                action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+            }
+            val broadcastRefreshFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            val refreshPendingIntent = PendingIntent.getBroadcast(
+                context,
+                widgetId,
+                refreshIntent,
+                broadcastRefreshFlags
+            )
+            views.setOnClickPendingIntent(R.id.refreshButton, refreshPendingIntent)
+
             val clickIntent = Intent(context, NoteActionReceiver::class.java)
 
             val broadcastFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
