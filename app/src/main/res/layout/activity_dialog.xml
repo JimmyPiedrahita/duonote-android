@@ -57,6 +57,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
                 android:layout_marginTop="24dp">
 
                 <com.google.android.material.button.MaterialButton
@@ -76,7 +78,7 @@
                     android:layout_height="56dp"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
-                    android:text="Agregar Nota"
+                    android:text="Agregar"
                     android:textColor="@color/text_on_accent"
                     app:backgroundTint="@color/accent_blue"
                     app:cornerRadius="12dp"/>
