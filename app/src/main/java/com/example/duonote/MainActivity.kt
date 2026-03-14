@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         noteAdapter = NoteAdapter(notesList, 
             onNoteClick = { note -> toggleNoteCompletion(note) },
-            onNoteDoubleClick = { note -> deleteNote(note) },
+            onDeleteClick = { note -> deleteNote(note) },
             onCopyClick = { note -> copyNoteText(note) }
         )
         rvNotes.layoutManager = LinearLayoutManager(this)

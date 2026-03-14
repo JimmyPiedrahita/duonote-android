@@ -93,6 +93,11 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
             action = "ACTION_COPY_TEXT"
         }
 
+        val fillInIntentDelete = Intent().apply {
+            putExtra("NOTE_ID", note.id)
+            action = "ACTION_DELETE_NOTE"
+        }
+
         val matcher = Patterns.WEB_URL.matcher(note.text ?: "")
         if (matcher.find()) {
             val url = matcher.group()
@@ -107,6 +112,7 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         }
 
         views.setOnClickFillInIntent(R.id.note_item_button, fillInIntentButton)
+        views.setOnClickFillInIntent(R.id.note_item_delete, fillInIntentDelete)
         views.setOnClickFillInIntent(R.id.note_item_text, fillInIntent)
         return views
     }

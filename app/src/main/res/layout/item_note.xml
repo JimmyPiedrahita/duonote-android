@@ -43,6 +43,16 @@
             android:contentDescription="Copy Note"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_copy_text"
+            android:layout_marginEnd="4dp"
+            app:tint="@color/text_secondary"/>
+
+        <ImageButton
+            android:id="@+id/btnDeleteNote"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:contentDescription="Delete Note"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_delete"
             app:tint="@color/text_secondary"/>
 
     </LinearLayout>

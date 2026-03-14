@@ -39,6 +39,19 @@ class NoteActionReceiver : BroadcastReceiver() {
                 clipboard.setPrimaryClip(clip)
                 Toast.makeText(context, "Texto copiado", Toast.LENGTH_SHORT).show()
             }
+            "ACTION_DELETE_NOTE" -> {
+                if (noteId == null) return
+                val qrDataStore = QRDataStore(context)
+                val contentQR = runBlocking {
+                    qrDataStore.qrContent.first() ?: "default"
+                }
+
+                val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(contentQR).child("Notes").child(noteId)
+                dbRef.removeValue().addOnCompleteListener {
+                    NoteWidget.updateWidget(context)
+                    Toast.makeText(context, "Nota eliminada", Toast.LENGTH_SHORT).show()
+                }
+            }
             else -> {
                 if (noteId == null) return
                 val qrDataStore = QRDataStore(context)
@@ -47,36 +60,12 @@ class NoteActionReceiver : BroadcastReceiver() {
                 }
 
                 val dbRef = FirebaseDatabase.getInstance().getReference("Connections").child(contentQR).child("Notes").child(noteId)
-                val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
-                val lastClickTime = prefs.getLong("last_click_time_$noteId", 0L)
-                val currentTime = System.currentTimeMillis()
 
-                if (currentTime - lastClickTime < 500) {
-                    prefs.edit { putBoolean("pending_delete_$noteId", true) }
-                    
-                    dbRef.removeValue().addOnCompleteListener {
-                        prefs.edit { 
-                            remove("last_click_time_$noteId")
-                            remove("pending_delete_$noteId")
-                        }
-                        NoteWidget.updateWidget(context)
-                    }
-                } else {
-                    prefs.edit { 
-                        putLong("last_click_time_$noteId", currentTime)
-                        putBoolean("pending_delete_$noteId", false)
-                    }
-
-                    dbRef.child("IsCompleted").get().addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val isPendingDelete = prefs.getBoolean("pending_delete_$noteId", false)
-                            
-                            if (!isPendingDelete) {
-                                val isCompleted = task.result?.getValue(Boolean::class.java) == true
-                                dbRef.child("IsCompleted").setValue(!isCompleted).addOnCompleteListener {
-                                    NoteWidget.updateWidget(context)
-                                }
-                            }
+                dbRef.child("IsCompleted").get().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        val isCompleted = task.result?.getValue(Boolean::class.java) == true
+                        dbRef.child("IsCompleted").setValue(!isCompleted).addOnCompleteListener {
+                            NoteWidget.updateWidget(context)
                         }
                     }
                 }

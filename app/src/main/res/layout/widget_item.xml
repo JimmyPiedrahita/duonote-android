@@ -38,6 +38,17 @@
         android:background="@drawable/bg_ripple_add_note"
         android:src="@drawable/ic_copy_text"
         android:scaleType="centerInside"
+        android:padding="4dp"
+        android:layout_marginEnd="4dp"/>
+
+    <ImageButton
+        android:id="@+id/note_item_delete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:contentDescription="Delete Note"
+        android:background="@drawable/bg_ripple_add_note"
+        android:src="@drawable/ic_delete"
+        android:scaleType="centerInside"
         android:padding="4dp"/>
 
 </LinearLayout>

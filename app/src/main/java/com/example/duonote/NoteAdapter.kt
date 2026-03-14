@@ -3,8 +3,6 @@ package com.example.duonote
 import android.content.Intent
 import android.graphics.Paint
 import android.net.Uri
-import android.os.Handler
-import android.os.Looper
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 class NoteAdapter(
     private val notes: List<Note>,
     private val onNoteClick: (Note) -> Unit,
-    private val onNoteDoubleClick: (Note) -> Unit,
+    private val onDeleteClick: (Note) -> Unit,
     private val onCopyClick: (Note) -> Unit
 ) : RecyclerView.Adapter<NoteAdapter.NoteViewHolder>() {
 
@@ -25,9 +23,8 @@ class NoteAdapter(
         val tvNoteText: TextView = view.findViewById(R.id.tvNoteText)
         val btnCopyNote: ImageButton = view.findViewById(R.id.btnCopyNote)
         val btnOpenLink: ImageButton = view.findViewById(R.id.btnOpenLink)
+        val btnDeleteNote: ImageButton = view.findViewById(R.id.btnDeleteNote)
         val noteContainer: LinearLayout = view.findViewById(R.id.noteContainer)
-        var lastClickTime: Long = 0
-        val handler = Handler(Looper.getMainLooper())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
@@ -78,25 +75,16 @@ class NoteAdapter(
         }
 
         holder.noteContainer.setOnClickListener {
-            handleItemClick(holder, note)
+            onNoteClick(note)
         }
 
         holder.btnCopyNote.setOnClickListener {
             onCopyClick(note)
         }
-    }
 
-    private fun handleItemClick(holder: NoteViewHolder, note: Note) {
-        val currentTime = System.currentTimeMillis()
-        if (currentTime - holder.lastClickTime < 500) {
-            holder.handler.removeCallbacksAndMessages(null)
-            onNoteDoubleClick(note)
-        } else {
-            holder.handler.postDelayed({
-                onNoteClick(note)
-            }, 500)
+        holder.btnDeleteNote.setOnClickListener {
+            onDeleteClick(note)
         }
-        holder.lastClickTime = currentTime
     }
 
     override fun getItemCount() = notes.size
