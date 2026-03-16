@@ -58,8 +58,16 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
     override fun getViewAt(position: Int): RemoteViews? {
         val note = listNotes[position]
         val views = RemoteViews(context.packageName, R.layout.widget_item)
-        views.setTextViewText(R.id.note_item_text, note.text)
         
+        val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+        val isVisible = prefs.getBoolean("notes_visible", true)
+        
+        val displayText = if (isVisible) note.text else {
+            note.text?.replace(Regex("[^\\s]"), "*") ?: ""
+        }
+        
+        views.setTextViewText(R.id.note_item_text, displayText)
+
         val backgroundResId = if (note.isCompleted == true) {
             R.drawable.bg_ripple_note_completed
         } else {

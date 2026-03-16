@@ -59,6 +59,26 @@ class NoteWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.refreshButton, refreshPendingIntent)
 
+            // Visibility button setup
+            val visibilityIntent = Intent(context, NoteWidget::class.java).apply {
+                action = "ACTION_TOGGLE_VISIBILITY"
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+            }
+            val visibilityPendingIntent = PendingIntent.getBroadcast(
+                context,
+                widgetId,
+                visibilityIntent,
+                broadcastRefreshFlags
+            )
+            views.setOnClickPendingIntent(R.id.visibilityButton, visibilityPendingIntent)
+            
+            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+            val isVisible = prefs.getBoolean("notes_visible", true)
+            views.setImageViewResource(
+                R.id.visibilityButton,
+                if (isVisible) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off
+            )
+
             val clickIntent = Intent(context, NoteActionReceiver::class.java)
 
             val broadcastFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -80,7 +100,13 @@ class NoteWidget : AppWidgetProvider() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
-        if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE && context != null) {
+        if (intent?.action == "ACTION_TOGGLE_VISIBILITY" && context != null) {
+            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+            val isVisible = prefs.getBoolean("notes_visible", true)
+            prefs.edit().putBoolean("notes_visible", !isVisible).apply()
+            
+            updateWidget(context)
+        } else if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE && context != null) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))
             appWidgetManager.notifyAppWidgetViewDataChanged(ids, R.id.widget_list_view)
