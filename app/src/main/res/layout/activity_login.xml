@@ -22,9 +22,9 @@
                 android:id="@+id/tvAppTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="32dp"
                 android:text="DuoNote"
-                android:textSize="42sp"
+                android:textSize="36sp"
                 android:textStyle="bold"
                 android:textColor="@color/text_primary"
                 android:fontFamily="sans-serif-medium"
@@ -36,9 +36,9 @@
                 android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="Sincroniza tus notas"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@color/text_secondary"
                 app:layout_constraintTop_toBottomOf="@id/tvAppTitle"
                 app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
                 android:id="@+id/cardQrScan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="24dp"
                 app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -63,12 +63,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp"
+                    android:padding="20dp"
                     android:gravity="center">
 
                     <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@drawable/ic_qr_scan"
                         app:tint="@color/text_primary"
                         android:contentDescription="QR Icon" />
@@ -76,28 +76,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="12dp"
                         android:text="Escanear Código QR"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Escanea el código QR desde la app de escritorio"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_secondary"
-                        android:textAlignment="center" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnScanQR"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
                         android:text="Abrir Escáner"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_primary"
                         app:backgroundTint="@color/button_background"
                         app:cornerRadius="12dp"
@@ -114,7 +105,7 @@
                 android:id="@+id/dividerContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 app:layout_constraintTop_toBottomOf="@id/cardQrScan"
@@ -148,7 +139,7 @@
                 android:id="@+id/cardManualCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -162,29 +153,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Ingresar código manualmente"
-                        android:textSize="18sp"
+                        android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Introduce el código de conexión de 6 caracteres"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_secondary" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="12dp"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         app:boxBackgroundColor="@color/input_background"
                         app:boxStrokeColor="@color/input_stroke"
@@ -195,10 +178,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Código de conexión"
-                            android:inputType="textCapCharacters"
+                            android:inputType="textVisiblePassword|textNoSuggestions"
                             android:maxLength="20"
                             android:textColor="@color/text_primary"
-                            android:textSize="18sp"
+                            android:textSize="16sp"
                             android:letterSpacing="0.2" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -206,10 +189,10 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnConnect"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="50dp"
                         android:layout_marginTop="16dp"
                         android:text="Conectar"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:textColor="@color/text_on_accent"
                         app:backgroundTint="@color/accent_blue"
                         app:cornerRadius="12dp" />
