@@ -21,6 +21,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import java.util.concurrent.Executor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -41,6 +44,15 @@ class MainActivity : AppCompatActivity() {
     private val notesList = mutableListOf<Note>()
     private var notesListener: ValueEventListener? = null
     private var currentQrContent: String? = null
+    
+    private var isAuthenticating = false
+    private lateinit var executor: Executor
+    private lateinit var biometricPrompt: BiometricPrompt
+    private lateinit var promptInfo: BiometricPrompt.PromptInfo
+
+    companion object {
+        var isUnlocked = false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,14 +70,101 @@ class MainActivity : AppCompatActivity() {
                 return@launch
             }
             
-            initViews()
-            loadNotes(savedCode)
+            setupBiometricPrompt()
+            
+            if (!isUnlocked) {
+                showBiometricPrompt()
+            } else {
+                initViews()
+                loadNotes(savedCode)
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun setupBiometricPrompt() {
+        executor = ContextCompat.getMainExecutor(this)
+        biometricPrompt = BiometricPrompt(this, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    isAuthenticating = false
+                    if (errorCode != BiometricPrompt.ERROR_USER_CANCELED && errorCode != BiometricPrompt.ERROR_NEGATIVE_BUTTON) {
+                         Toast.makeText(applicationContext, "Error de autenticación: $errString", Toast.LENGTH_SHORT).show()
+                    }
+                    finish() // Close app if authentication fails or is cancelled
+                }
+
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    isUnlocked = true
+                    isAuthenticating = false
+                    findViewById<View>(R.id.main).visibility = View.VISIBLE
+                    
+                    lifecycleScope.launch {
+                        val savedCode = qrDataStore.qrContent.first()
+                        initViews()
+                        loadNotes(savedCode ?: "")
+                    }
+                    Toast.makeText(applicationContext, "Autenticación exitosa", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    Toast.makeText(applicationContext, "Autenticación fallida", Toast.LENGTH_SHORT).show()
+                }
+            })
+
+        promptInfo = BiometricPrompt.PromptInfo.Builder()
+            .setTitle("Desbloqueo de DuoNote")
+            .setSubtitle("Usa tu huella para acceder a tus notas")
+            .setNegativeButtonText("Cancelar")
+            .build()
+    }
+
+    private fun showBiometricPrompt() {
+        val prefs = getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+        val isVisible = prefs.getBoolean("notes_visible", true)
+        
+        if (isVisible) {
+            // Text is NOT hidden, app should be UNLOCKED automatically
+            isUnlocked = true
+            findViewById<View>(R.id.main).visibility = View.VISIBLE
+            lifecycleScope.launch {
+                val savedCode = qrDataStore.qrContent.first()
+                initViews()
+                loadNotes(savedCode ?: "")
+            }
+            return
+        }
+
+        // Can only show if hardware is available
+        val biometricManager = BiometricManager.from(this)
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS) {
+            findViewById<View>(R.id.main).visibility = View.INVISIBLE // Hide content while authenticating
+            isAuthenticating = true
+            biometricPrompt.authenticate(promptInfo)
+        } else {
+            // No biometric available, fallback to unlock state directly
+            isUnlocked = true
+            findViewById<View>(R.id.main).visibility = View.VISIBLE
+            lifecycleScope.launch {
+                val savedCode = qrDataStore.qrContent.first()
+                initViews()
+                loadNotes(savedCode ?: "")
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!isUnlocked && !isAuthenticating && this::biometricPrompt.isInitialized) {
+            showBiometricPrompt()
         }
     }
 

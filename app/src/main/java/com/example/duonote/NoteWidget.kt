@@ -135,8 +135,20 @@ class NoteWidget : AppWidgetProvider() {
         if (intent?.action == "ACTION_TOGGLE_VISIBILITY" && context != null) {
             val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
             val isVisible = prefs.getBoolean("notes_visible", true)
-            prefs.edit().putBoolean("notes_visible", !isVisible).apply()
-            
+            if (isVisible) {
+                // It's visible, user wants to hide it -> lock the app!
+                MainActivity.isUnlocked = false
+                prefs.edit().putBoolean("notes_visible", false).apply()
+                updateWidget(context)
+            } else {
+                // It's hidden, user wants to unhide it -> ask for biometric
+                val bioIntent = Intent(context, BiometricActivity::class.java).apply {
+                    putExtra("ACTION_ON_SUCCESS", "TOGGLE_VISIBILITY")
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                context.startActivity(bioIntent)
+            }
+        } else if (intent?.action == "ACTION_UPDATE_WIDGET_UI" && context != null) {
             updateWidget(context)
         } else if (intent?.action == "ACTION_TOGGLE_THEME" && context != null) {
             val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)

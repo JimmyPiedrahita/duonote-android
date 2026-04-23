@@ -49,7 +49,7 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
                 latch.countDown()
             }
         })
-        latch.await(1, TimeUnit.SECONDS)
+        latch.await(5, TimeUnit.SECONDS)
     }
 
     override fun onDestroy() {}
@@ -115,21 +115,35 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
             action = "ACTION_DELETE_NOTE"
         }
 
-        val matcher = Patterns.WEB_URL.matcher(note.text ?: "")
-        if (matcher.find()) {
-            val url = matcher.group()
-            views.setViewVisibility(R.id.note_item_link, View.VISIBLE)
-            val fillInIntentLink = Intent().apply {
-                putExtra("NOTE_URL", url)
-                action = "ACTION_OPEN_LINK"
+        if (isVisible) {
+            views.setViewVisibility(R.id.note_item_button, View.VISIBLE)
+            views.setViewVisibility(R.id.note_item_delete, View.VISIBLE)
+            
+            val matcher = Patterns.WEB_URL.matcher(note.text ?: "")
+            if (matcher.find()) {
+                val url = matcher.group()
+                views.setViewVisibility(R.id.note_item_link, View.VISIBLE)
+                val fillInIntentLink = Intent().apply {
+                    putExtra("NOTE_URL", url)
+                    action = "ACTION_OPEN_LINK"
+                }
+                views.setOnClickFillInIntent(R.id.note_item_link, fillInIntentLink)
+            } else {
+                views.setViewVisibility(R.id.note_item_link, View.GONE)
             }
-            views.setOnClickFillInIntent(R.id.note_item_link, fillInIntentLink)
+
+            views.setOnClickFillInIntent(R.id.note_item_button, fillInIntentButton)
+            views.setOnClickFillInIntent(R.id.note_item_delete, fillInIntentDelete)
         } else {
+            views.setViewVisibility(R.id.note_item_button, View.INVISIBLE)
+            views.setViewVisibility(R.id.note_item_delete, View.INVISIBLE)
             views.setViewVisibility(R.id.note_item_link, View.GONE)
+            
+            // clear intents so they are unclickable
+            views.setOnClickFillInIntent(R.id.note_item_button, Intent())
+            views.setOnClickFillInIntent(R.id.note_item_delete, Intent())
         }
 
-        views.setOnClickFillInIntent(R.id.note_item_button, fillInIntentButton)
-        views.setOnClickFillInIntent(R.id.note_item_delete, fillInIntentDelete)
         views.setOnClickFillInIntent(R.id.note_item_text, fillInIntent)
         return views
     }
