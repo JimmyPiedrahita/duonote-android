@@ -23,6 +23,26 @@ class NoteWidget : AppWidgetProvider() {
                 setRemoteAdapter(R.id.widget_list_view, intent)
                 setEmptyView(R.id.widget_list_view, android.R.id.empty)
             }
+            
+            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+            val isDarkTheme = prefs.getBoolean("is_dark_theme", true)
+            
+            if (isDarkTheme) {
+                views.setInt(R.id.header_widget, "setBackgroundResource", R.drawable.bg_widget_item_dark)
+                views.setImageViewResource(R.id.themeButton, R.drawable.ic_theme_dark)
+                views.setInt(R.id.themeButton, "setColorFilter", android.graphics.Color.WHITE)
+                views.setInt(R.id.visibilityButton, "setColorFilter", android.graphics.Color.WHITE)
+                views.setInt(R.id.refreshButton, "setColorFilter", android.graphics.Color.WHITE)
+                views.setInt(R.id.imageButton, "setColorFilter", android.graphics.Color.WHITE)
+            } else {
+                views.setInt(R.id.header_widget, "setBackgroundResource", R.drawable.bg_widget_item_light)
+                views.setImageViewResource(R.id.themeButton, R.drawable.ic_theme_light)
+                val iconColorLight = android.graphics.Color.parseColor("#333333") // Menu icons same as item icons
+                views.setInt(R.id.themeButton, "setColorFilter", iconColorLight)
+                views.setInt(R.id.visibilityButton, "setColorFilter", iconColorLight)
+                views.setInt(R.id.refreshButton, "setColorFilter", iconColorLight)
+                views.setInt(R.id.imageButton, "setColorFilter", iconColorLight)
+            }
             val dialogIntent = Intent(context, DialogActivity::class.java).apply {
                 flags = Intent.FLAG_ACTIVITY_NEW_TASK
             }
@@ -59,6 +79,19 @@ class NoteWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.refreshButton, refreshPendingIntent)
 
+            // Theme button setup
+            val themeIntent = Intent(context, NoteWidget::class.java).apply {
+                action = "ACTION_TOGGLE_THEME"
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
+            }
+            val themePendingIntent = PendingIntent.getBroadcast(
+                context,
+                widgetId,
+                themeIntent,
+                broadcastRefreshFlags
+            )
+            views.setOnClickPendingIntent(R.id.themeButton, themePendingIntent)
+
             // Visibility button setup
             val visibilityIntent = Intent(context, NoteWidget::class.java).apply {
                 action = "ACTION_TOGGLE_VISIBILITY"
@@ -72,7 +105,6 @@ class NoteWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.visibilityButton, visibilityPendingIntent)
             
-            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
             val isVisible = prefs.getBoolean("notes_visible", true)
             views.setImageViewResource(
                 R.id.visibilityButton,
@@ -104,6 +136,12 @@ class NoteWidget : AppWidgetProvider() {
             val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
             val isVisible = prefs.getBoolean("notes_visible", true)
             prefs.edit().putBoolean("notes_visible", !isVisible).apply()
+            
+            updateWidget(context)
+        } else if (intent?.action == "ACTION_TOGGLE_THEME" && context != null) {
+            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
+            val isDarkTheme = prefs.getBoolean("is_dark_theme", true)
+            prefs.edit().putBoolean("is_dark_theme", !isDarkTheme).apply()
             
             updateWidget(context)
         } else if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE && context != null) {

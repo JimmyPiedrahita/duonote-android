@@ -76,8 +76,8 @@
     <color name="widget_background">#05070a</color>
     <color name="widget_background_pending">#0Dffffff</color>
     <color name="widget_background_completed">#08ffffff</color>
-    <color name="widget_text_pending">#e0e0e0</color>
-    <color name="widget_text_completed">#6a6a6a</color>
+    <color name="widget_text_pending">#ffffff</color>
+    <color name="widget_text_completed">#9e9e9e</color>
 
     <!-- Legacy colors mapped to new theme -->
     <color name="color1">#0a0c10</color>

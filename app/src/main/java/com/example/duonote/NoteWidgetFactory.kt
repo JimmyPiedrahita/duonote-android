@@ -61,6 +61,7 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         
         val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
         val isVisible = prefs.getBoolean("notes_visible", true)
+        val isDarkTheme = prefs.getBoolean("is_dark_theme", true)
         
         val displayText = if (isVisible) note.text else {
             note.text?.replace(Regex("[^\\s]"), "*") ?: ""
@@ -69,27 +70,35 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         views.setTextViewText(R.id.note_item_text, displayText)
 
         val backgroundResId = if (note.isCompleted == true) {
-            R.drawable.bg_ripple_note_completed
+            if (isDarkTheme) R.drawable.bg_ripple_note_completed_dark else R.drawable.bg_ripple_note_completed_light
         } else {
-            R.drawable.bg_ripple_note_pending
+            if (isDarkTheme) R.drawable.bg_ripple_note_pending_dark else R.drawable.bg_ripple_note_pending_light
         }
         views.setInt(R.id.widget_item_container, "setBackgroundResource", backgroundResId)
         
+        val textPendingColor = if (isDarkTheme) context.getColor(R.color.widget_text_pending) else android.graphics.Color.parseColor("#000000")
+        val textCompletedColor = if (isDarkTheme) context.getColor(R.color.widget_text_completed) else android.graphics.Color.parseColor("#555555")
+
         if (note.isCompleted == true) {
-            views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.widget_text_completed))
+            views.setInt(R.id.note_item_text, "setTextColor", textCompletedColor)
             views.setInt(
                 R.id.note_item_text,
                 "setPaintFlags",
                 android.graphics.Paint.STRIKE_THRU_TEXT_FLAG or android.graphics.Paint.ANTI_ALIAS_FLAG
             )
         } else {
-            views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.widget_text_pending))
+            views.setInt(R.id.note_item_text, "setTextColor", textPendingColor)
             views.setInt(
                 R.id.note_item_text,
                 "setPaintFlags",
                 android.graphics.Paint.ANTI_ALIAS_FLAG
             )
         }
+
+        val iconColor = if (isDarkTheme) android.graphics.Color.WHITE else android.graphics.Color.parseColor("#333333")
+        views.setInt(R.id.note_item_link, "setColorFilter", iconColor)
+        views.setInt(R.id.note_item_button, "setColorFilter", iconColor)
+        views.setInt(R.id.note_item_delete, "setColorFilter", iconColor)
         
         val fillInIntent = Intent().apply {
             putExtra("NOTE_ID", note.id)
