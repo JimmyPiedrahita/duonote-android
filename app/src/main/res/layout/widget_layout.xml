@@ -19,7 +19,7 @@
         android:divider="@color/transparent"
         android:listSelector="@color/transparent"
         android:background="@android:color/transparent"
-        android:paddingTop="0dp"
+        android:paddingTop="6dp"
         android:paddingBottom="8dp"/>
 
     <LinearLayout
@@ -30,8 +30,8 @@
         android:gravity="center_vertical|end"
         android:background="@drawable/bg_widget_item"
         android:padding="8dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
         android:layout_weight="0">
 
         <ImageButton
