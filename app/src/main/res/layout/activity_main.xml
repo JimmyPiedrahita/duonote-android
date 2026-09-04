@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_main"
+    android:background="@color/background_dark"
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Mis Notas"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary" />
 
@@ -72,7 +72,7 @@
             android:id="@+id/rvNotes"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="16dp"
+            android:padding="12dp"
             android:clipToPadding="false"
             app:layout_constraintTop_toBottomOf="@id/headerCard"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +129,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
+        android:layout_margin="12dp"
         android:src="@drawable/ic_input_add"
         android:contentDescription="Add Note"
         app:backgroundTint="@color/accent_blue"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
+    android:background="@drawable/bg_gradient_main"
     tools:context=".QRScannerActivity">
 
     <androidx.camera.view.PreviewView
@@ -41,9 +41,9 @@
         android:text="Cancelar"
         android:layout_marginBottom="32dp"
         style="@style/Widget.Material3.Button.OutlinedButton"
-        app:strokeColor="@color/text_primary"
+        app:strokeColor="@color/card_border"
         android:textColor="@color/text_primary"
-        app:cornerRadius="12dp"
+        app:cornerRadius="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
