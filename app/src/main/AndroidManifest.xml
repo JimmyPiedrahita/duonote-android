@@ -9,6 +9,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.camera.autofocus" android:required="false" />
     <application
+        android:name=".DuoNoteApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -30,9 +31,12 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity
+            android:name=".AuthActivity"
+            android:exported="false" />
+        <activity
             android:name=".DialogActivity"
             android:theme="@style/Theme.DuoNote.Dialog"
-            android:exported="true"/>
+            android:exported="false"/>
         <activity
             android:name=".QRScannerActivity"
             android:screenOrientation="portrait"

@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.first
 
 class NoteActionReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
+        if (!SecurityStore(context).isWidgetRevealed()) return
         val noteId = intent.getStringExtra("NOTE_ID")
 
         when (intent.action) {

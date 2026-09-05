@@ -30,6 +30,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var tvStatus: TextView
     private lateinit var qrDataStore: QRDataStore
 
+    private val appAuthLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) navigateToMain()
+    }
+
     private val qrScannerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -61,8 +67,13 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val savedCode = qrDataStore.qrContent.first()
             if (!savedCode.isNullOrEmpty()) {
-                // User is already connected, go to MainActivity
-                navigateToMain()
+                val securityStore = SecurityStore(this@LoginActivity)
+                if (securityStore.hasPin() && !securityStore.isWidgetRevealed() &&
+                    !AppSecuritySession.appUnlocked) {
+                    appAuthLauncher.launch(SecurityIntents.unlockApp(this@LoginActivity))
+                } else {
+                    navigateToMain()
+                }
                 return@launch
             }
             

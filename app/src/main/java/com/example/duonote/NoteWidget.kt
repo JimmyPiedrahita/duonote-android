@@ -23,22 +23,14 @@ class NoteWidget : AppWidgetProvider() {
                 setRemoteAdapter(R.id.widget_list_view, intent)
                 setEmptyView(R.id.widget_list_view, android.R.id.empty)
             }
-            val dialogIntent = Intent(context, DialogActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-
             val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.FLAG_IMMUTABLE
             } else {
                 0
             }
 
-            val pendingIntent = PendingIntent.getActivity(
-                context,
-                0,
-                dialogIntent,
-                pendingIntentFlags
-            )
+            val dialogIntent = Intent(context, DialogActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(context, widgetId, dialogIntent, pendingIntentFlags)
             views.setOnClickPendingIntent(R.id.imageButton, pendingIntent)
 
             // Refresh button setup
@@ -72,12 +64,12 @@ class NoteWidget : AppWidgetProvider() {
             )
             views.setOnClickPendingIntent(R.id.visibilityButton, visibilityPendingIntent)
             
-            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
-            val isVisible = prefs.getBoolean("notes_visible", true)
+            val isVisible = SecurityStore(context).isWidgetRevealed()
             views.setImageViewResource(
                 R.id.visibilityButton,
                 if (isVisible) R.drawable.ic_visibility_on else R.drawable.ic_visibility_off
             )
+            views.setViewVisibility(R.id.imageButton, android.view.View.VISIBLE)
 
             val clickIntent = Intent(context, NoteActionReceiver::class.java)
 
@@ -101,11 +93,18 @@ class NoteWidget : AppWidgetProvider() {
     override fun onReceive(context: Context?, intent: Intent?) {
         super.onReceive(context, intent)
         if (intent?.action == "ACTION_TOGGLE_VISIBILITY" && context != null) {
-            val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
-            val isVisible = prefs.getBoolean("notes_visible", true)
-            prefs.edit().putBoolean("notes_visible", !isVisible).apply()
-            
-            updateWidget(context)
+            val securityStore = SecurityStore(context)
+            if (securityStore.isWidgetRevealed()) {
+                if (securityStore.hasPin()) {
+                    securityStore.setWidgetRevealed(false)
+                    AppSecuritySession.appUnlocked = false
+                    updateWidget(context)
+                } else {
+                    context.startActivity(SecurityIntents.createPin(context))
+                }
+            } else {
+                context.startActivity(SecurityIntents.revealWidget(context))
+            }
         } else if (intent?.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE && context != null) {
             val appWidgetManager = AppWidgetManager.getInstance(context)
             val ids = appWidgetManager.getAppWidgetIds(ComponentName(context, NoteWidget::class.java))

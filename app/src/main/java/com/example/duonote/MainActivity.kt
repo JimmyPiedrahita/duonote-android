@@ -41,6 +41,15 @@ class MainActivity : AppCompatActivity() {
     private val notesList = mutableListOf<Note>()
     private var notesListener: ValueEventListener? = null
     private var currentQrContent: String? = null
+    private var appAuthInProgress = false
+
+    private val appAuthLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        appAuthInProgress = false
+        if (result.resultCode == RESULT_OK) continueLoading()
+        else finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,15 +66,29 @@ class MainActivity : AppCompatActivity() {
                 navigateToLogin()
                 return@launch
             }
-            
-            initViews()
-            loadNotes(savedCode)
+
+            val securityStore = SecurityStore(this@MainActivity)
+            if (securityStore.hasPin() && !securityStore.isWidgetRevealed() &&
+                !AppSecuritySession.appUnlocked && !appAuthInProgress) {
+                appAuthInProgress = true
+                appAuthLauncher.launch(SecurityIntents.unlockApp(this@MainActivity))
+            } else {
+                continueLoading(savedCode)
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+    private fun continueLoading(savedCode: String? = null) {
+        lifecycleScope.launch {
+            val code = savedCode ?: qrDataStore.qrContent.first() ?: return@launch
+            initViews()
+            loadNotes(code)
         }
     }
 
@@ -135,6 +158,8 @@ class MainActivity : AppCompatActivity() {
 
             // Clear local data
             qrDataStore.clearQRContent()
+            SecurityStore(this@MainActivity).clear()
+            AppSecuritySession.appUnlocked = false
             
             // Stop Firebase service
             val serviceIntent = Intent(this@MainActivity, FirebaseListenerService::class.java)
@@ -265,6 +290,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val securityStore = SecurityStore(this)
+        if (securityStore.hasPin() && !securityStore.isWidgetRevealed() &&
+            !AppSecuritySession.appUnlocked && !appAuthInProgress) {
+            appAuthInProgress = true
+            appAuthLauncher.launch(SecurityIntents.unlockApp(this))
+        }
         startFirebaseService()
     }
 

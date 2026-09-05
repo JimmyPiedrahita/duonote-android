@@ -59,14 +59,17 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         val note = listNotes[position]
         val views = RemoteViews(context.packageName, R.layout.widget_item)
         
-        val prefs = context.getSharedPreferences("widget_prefs", Context.MODE_PRIVATE)
-        val isVisible = prefs.getBoolean("notes_visible", true)
+        val isVisible = SecurityStore(context).isWidgetRevealed()
         
         val displayText = if (isVisible) note.text else {
             note.text?.replace(Regex("[^\\s]"), "*") ?: ""
         }
         
         views.setTextViewText(R.id.note_item_text, displayText)
+        val actionVisibility = if (isVisible) View.VISIBLE else View.GONE
+        views.setViewVisibility(R.id.note_item_link, actionVisibility)
+        views.setViewVisibility(R.id.note_item_button, actionVisibility)
+        views.setViewVisibility(R.id.note_item_delete, actionVisibility)
 
         val backgroundResId = if (note.isCompleted == true) {
             R.drawable.bg_ripple_note_completed
@@ -109,7 +112,7 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         val matcher = Patterns.WEB_URL.matcher(note.text ?: "")
         if (matcher.find()) {
             val url = matcher.group()
-            views.setViewVisibility(R.id.note_item_link, View.VISIBLE)
+            views.setViewVisibility(R.id.note_item_link, actionVisibility)
             val fillInIntentLink = Intent().apply {
                 putExtra("NOTE_URL", url)
                 action = "ACTION_OPEN_LINK"
