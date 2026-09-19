@@ -22,6 +22,15 @@
         android:paddingTop="6dp"
         android:paddingBottom="8dp"/>
 
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/widget_empty"
+        android:textColor="@color/text_secondary"
+        android:visibility="gone" />
+
     <LinearLayout
         android:id="@+id/header_widget"
         android:layout_width="match_parent"
