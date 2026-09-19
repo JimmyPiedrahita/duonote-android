@@ -14,6 +14,7 @@ biometric = "1.1.0"
 material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
+workManager = "2.10.1"
 
 [libraries]
 androidx-camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraxVersion" }
@@ -33,6 +34,7 @@ androidx-biometric = { module = "androidx.biometric:biometric", version.ref = "b
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workManager" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

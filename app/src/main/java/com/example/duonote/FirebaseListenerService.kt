@@ -45,6 +45,9 @@ class FirebaseListenerService : Service() {
         super.onCreate()
         qrDataStore = QRDataStore(this)
 
+        startForegroundServiceWithNotification()
+        BackgroundSyncScheduler.schedule(this)
+
         try {
             FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         } catch (e: Exception) {
@@ -65,8 +68,6 @@ class FirebaseListenerService : Service() {
                 }
             }
         }
-
-        startForegroundServiceWithNotification()
     }
 
     private fun setupFirebaseListener() {

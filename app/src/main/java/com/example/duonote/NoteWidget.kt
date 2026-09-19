@@ -14,6 +14,7 @@ class NoteWidget : AppWidgetProvider() {
     override fun onUpdate(
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
+        BackgroundSyncScheduler.schedule(context)
         for (widgetId in appWidgetIds) {
             val intent = Intent(context, NoteWidgetService::class.java).apply {
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
@@ -114,6 +115,7 @@ class NoteWidget : AppWidgetProvider() {
 
     companion object {
         fun updateWidget(context: Context) {
+            BackgroundSyncScheduler.schedule(context)
             val intent = Intent(context, NoteWidget::class.java).apply {
                 action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             }

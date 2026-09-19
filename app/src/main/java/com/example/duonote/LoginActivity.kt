@@ -110,10 +110,6 @@ class LoginActivity : AppCompatActivity() {
         tvStatus.visibility = View.VISIBLE
 
         // Save code and activate session in Firebase
-        lifecycleScope.launch {
-            qrDataStore.saveQRContent(code)
-        }
-
         val database = FirebaseDatabase.getInstance()
         val sessionRef = database.getReference("Connections").child(code).child("sesion_activa")
         
@@ -123,12 +119,15 @@ class LoginActivity : AppCompatActivity() {
                 tvStatus.text = "¡Conectado!"
                 Toast.makeText(this, "Conexión exitosa", Toast.LENGTH_SHORT).show()
                 
-                // Start Firebase service
-                val serviceIntent = Intent(this, FirebaseListenerService::class.java)
-                ContextCompat.startForegroundService(this, serviceIntent)
-                
-                // Navigate to main
-                navigateToMain()
+                lifecycleScope.launch {
+                    qrDataStore.saveQRContent(code)
+                    BackgroundSyncScheduler.schedule(this@LoginActivity)
+
+                    val serviceIntent = Intent(this@LoginActivity, FirebaseListenerService::class.java)
+                    ContextCompat.startForegroundService(this@LoginActivity, serviceIntent)
+
+                    navigateToMain()
+                }
             }
             .addOnFailureListener { exception ->
                 showLoading(false)
