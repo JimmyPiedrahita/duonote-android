@@ -41,10 +41,6 @@
             android:name=".ChangePinActivity"
             android:exported="false" />
         <activity
-            android:name=".DialogActivity"
-            android:theme="@style/Theme.DuoNote.Dialog"
-            android:exported="false"/>
-        <activity
             android:name=".QRScannerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.DuoNote"

@@ -242,13 +242,15 @@
 
                     <ImageButton
                         android:id="@+id/composerSend"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
                         android:layout_gravity="bottom|end"
                         android:layout_margin="12dp"
-                        android:background="@drawable/bg_ripple_add_note"
+                        android:background="@drawable/bg_composer_send"
                         android:contentDescription="Agregar nota"
-                        android:src="@drawable/ic_input_add"
+                        android:padding="9dp"
+                        android:src="@drawable/ic_input_arrow"
+                        android:enabled="false"
                         app:tint="@color/text_on_accent" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>

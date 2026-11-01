@@ -1,0 +1,18 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#4DD8B963" />
+            <corners android:radius="10dp" />
+        </shape>
+    </item>
+    <item>
+        <ripple android:color="@color/card_background_hover">
+            <item>
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/accent_blue" />
+                    <corners android:radius="10dp" />
+                </shape>
+            </item>
+        </ripple>
+    </item>
+</selector>

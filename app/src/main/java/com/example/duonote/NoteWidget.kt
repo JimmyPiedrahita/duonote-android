@@ -30,8 +30,13 @@ class NoteWidget : AppWidgetProvider() {
                 0
             }
 
-            val dialogIntent = Intent(context, DialogActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(context, widgetId, dialogIntent, pendingIntentFlags)
+            val addNoteIntent = Intent(context, MainActivity::class.java).apply {
+                action = MainActivity.ACTION_FOCUS_COMPOSER
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                    Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            val pendingIntent = PendingIntent.getActivity(context, widgetId, addNoteIntent, pendingIntentFlags)
             views.setOnClickPendingIntent(R.id.imageButton, pendingIntent)
 
             // Refresh button setup

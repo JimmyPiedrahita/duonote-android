@@ -14,6 +14,8 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -49,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private var notesListener: ValueEventListener? = null
     private var currentQrContent: String? = null
     private var appAuthInProgress = false
+    private var focusComposerRequested = false
 
     private val appAuthLauncher = registerForActivityResult(
         androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -61,6 +64,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        focusComposerRequested = intent.action == ACTION_FOCUS_COMPOSER
         setContentView(R.layout.activity_main)
 
         qrDataStore = QRDataStore(this)
@@ -96,6 +100,30 @@ class MainActivity : AppCompatActivity() {
             val code = savedCode ?: qrDataStore.qrContent.first() ?: return@launch
             initViews()
             loadNotes(code)
+            focusComposerIfRequested()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        if (intent.action == ACTION_FOCUS_COMPOSER) {
+            focusComposerRequested = true
+            focusComposerIfReady()
+        }
+    }
+
+    private fun focusComposerIfRequested() {
+        if (focusComposerRequested) focusComposerIfReady()
+    }
+
+    private fun focusComposerIfReady() {
+        if (!::composerInput.isInitialized) return
+        focusComposerRequested = false
+        composerInput.requestFocus()
+        composerInput.post {
+            val imm = getSystemService(android.view.inputmethod.InputMethodManager::class.java)
+            imm?.showSoftInput(composerInput, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT)
         }
     }
 
@@ -121,13 +149,20 @@ class MainActivity : AppCompatActivity() {
         rvNotes.adapter = noteAdapter
 
         fabAddNote.setOnClickListener {
-            val intent = Intent(this, DialogActivity::class.java)
-            startActivity(intent)
+            composerInput.requestFocus()
+            focusComposerIfReady()
         }
 
         composerSend.setOnClickListener {
             addNoteFromComposer()
         }
+        composerInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(editable: Editable?) {
+                composerSend.isEnabled = !editable.isNullOrBlank()
+            }
+            override fun beforeTextChanged(text: CharSequence?, start: Int, count: Int, after: Int) = Unit
+            override fun onTextChanged(text: CharSequence?, start: Int, before: Int, count: Int) = Unit
+        })
 
         btnAddWidget.setOnClickListener {
             addWidgetToHomeScreen()
@@ -357,5 +392,9 @@ class MainActivity : AppCompatActivity() {
     private fun startFirebaseService() {
         val serviceIntent = Intent(this, FirebaseListenerService::class.java)
         ContextCompat.startForegroundService(this, serviceIntent)
+    }
+
+    companion object {
+        const val ACTION_FOCUS_COMPOSER = "com.example.duonote.action.FOCUS_COMPOSER"
     }
 }
