@@ -6,15 +6,20 @@ import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.graphics.Rect
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.FirebaseDatabase
@@ -22,13 +27,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
-    
+    private lateinit var btnCreateSession: Button
     private lateinit var btnScanQR: Button
+    private lateinit var btnCodeConnection: Button
+    private lateinit var btnCloseManualCode: ImageButton
     private lateinit var btnConnect: Button
     private lateinit var etCode: TextInputEditText
     private lateinit var progressBar: ProgressBar
     private lateinit var tvStatus: TextView
     private lateinit var qrDataStore: QRDataStore
+    private lateinit var loginScroll: ScrollView
 
     private val appAuthLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -85,13 +93,46 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initViews() {
         btnScanQR = findViewById(R.id.btnScanQR)
+        btnCodeConnection = findViewById(R.id.btnCodeConnection)
+        btnCloseManualCode = findViewById(R.id.btnCloseManualCode)
+        btnCreateSession = findViewById(R.id.btnCreateSession)
         btnConnect = findViewById(R.id.btnConnect)
         etCode = findViewById(R.id.etCode)
         progressBar = findViewById(R.id.progressBar)
         tvStatus = findViewById(R.id.tvStatus)
+        loginScroll = findViewById(R.id.loginScroll)
+        ViewCompat.setOnApplyWindowInsetsListener(loginScroll) { view, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, imeInsets.bottom + 24)
+            if (insets.isVisible(WindowInsetsCompat.Type.ime())) {
+                view.postDelayed({ ensureCodeFieldVisible() }, 100)
+            }
+            insets
+        }
+        ViewCompat.requestApplyInsets(loginScroll)
+
+        btnCreateSession.setOnClickListener {
+            createSession()
+        }
 
         btnScanQR.setOnClickListener {
             checkCameraPermissionAndScan()
+        }
+
+        btnCodeConnection.setOnClickListener {
+            findViewById<View>(R.id.cardManualCode).visibility = View.VISIBLE
+            etCode.requestFocus()
+            loginScroll.postDelayed({ ensureCodeFieldVisible() }, 250)
+        }
+
+        etCode.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                loginScroll.postDelayed({ ensureCodeFieldVisible() }, 250)
+            }
+        }
+
+        btnCloseManualCode.setOnClickListener {
+            findViewById<View>(R.id.cardManualCode).visibility = View.GONE
         }
 
         btnConnect.setOnClickListener {
@@ -102,6 +143,23 @@ class LoginActivity : AppCompatActivity() {
             }
             connectWithCode(code)
         }
+    }
+
+    private fun ensureCodeFieldVisible() {
+        val fieldRect = Rect()
+        etCode.getGlobalVisibleRect(fieldRect)
+        val windowRect = Rect()
+        loginScroll.getWindowVisibleDisplayFrame(windowRect)
+        val requiredBottom = windowRect.bottom - 32
+        if (fieldRect.bottom > requiredBottom) {
+            loginScroll.smoothScrollBy(0, fieldRect.bottom - requiredBottom)
+        }
+    }
+
+    private fun createSession() {
+        val code = List(3) { (1..4).map { ('A'..'Z').random() }.joinToString("") }
+            .joinToString("-")
+        connectWithCode(code)
     }
 
     private fun connectWithCode(code: String) {
@@ -144,6 +202,9 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoading(show: Boolean) {
         progressBar.visibility = if (show) View.VISIBLE else View.GONE
         btnScanQR.isEnabled = !show
+        btnCreateSession.isEnabled = !show
+        btnCodeConnection.isEnabled = !show
+        btnCloseManualCode.isEnabled = !show
         btnConnect.isEnabled = !show
         etCode.isEnabled = !show
     }

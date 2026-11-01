@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Cancelar"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="40dp"
         style="@style/Widget.Material3.Button.OutlinedButton"
         app:strokeColor="@color/card_border"
         android:textColor="@color/text_primary"

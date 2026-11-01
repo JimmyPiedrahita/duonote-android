@@ -1,78 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_root"
-    android:orientation="vertical"
-    android:background="@android:color/transparent"
-    android:padding="0dp"
-    android:clipToPadding="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/widget_background">
+
+    <LinearLayout
+        android:id="@+id/widget_header"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:background="@color/widget_background">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Mis notas"
+            android:textColor="@color/widget_text_pending"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/widget_note_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NOTAS"
+            android:textColor="@color/widget_text_completed"
+            android:textSize="8sp" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/widget_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:dividerHeight="6dp"
-        android:scrollbars="none"
+        android:background="@color/widget_background"
         android:divider="@color/transparent"
+        android:dividerHeight="4dp"
         android:listSelector="@color/transparent"
-        android:background="@android:color/transparent"
-        android:paddingTop="6dp"
-        android:paddingBottom="8dp"/>
+        android:paddingStart="8dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="4dp"
+        android:scrollbars="none" />
 
     <TextView
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:padding="12dp"
         android:text="@string/widget_empty"
-        android:textColor="@color/text_secondary"
+        android:textColor="@color/widget_text_completed"
         android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/header_widget"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center_vertical|end"
-        android:background="@drawable/bg_widget_item"
-        android:padding="8dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="6dp"
-        android:layout_weight="0">
+        android:background="@color/widget_toolbar_background">
 
         <ImageButton
             android:id="@+id/visibilityButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-            android:src="@drawable/ic_visibility_on"
-            android:background="@drawable/bg_ripple_widget_note"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/transparent"
             android:contentDescription="Toggle visibility"
-            android:scaleType="centerInside"
-                android:padding="5dp"
-            android:layout_marginEnd="8dp"/>
+            android:padding="12dp"
+            android:src="@drawable/ic_visibility_on" />
 
         <ImageButton
             android:id="@+id/refreshButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-            android:src="@drawable/ic_refresh_widget"
-            android:background="@drawable/bg_ripple_widget_note"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/transparent"
             android:contentDescription="Refresh notes"
-            android:scaleType="centerInside"
-                android:padding="5dp"
-            android:layout_marginEnd="8dp"/>
+            android:padding="12dp"
+            android:src="@drawable/ic_refresh_widget" />
 
         <ImageButton
             android:id="@+id/imageButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-            android:src="@drawable/ic_add_notes"
-            android:background="@drawable/bg_ripple_widget_note"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/transparent"
             android:contentDescription="@string/description_button_add"
-            android:scaleType="centerInside"
-                android:padding="5dp"/>
+            android:padding="12dp"
+            android:src="@drawable/ic_add_notes" />
     </LinearLayout>
 </LinearLayout>

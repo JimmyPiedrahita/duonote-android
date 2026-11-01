@@ -4,26 +4,25 @@
     <item>
         <color android:color="@color/background_dark" />
     </item>
-    <!-- Blue gradient in bottom-right -->
+    <!-- Subtle warm glow matching the Figma reference -->
     <item>
         <shape>
             <gradient
                 android:type="radial"
                 android:gradientRadius="500dp"
-                android:startColor="#40387eff"
-                android:endColor="#00387eff"
+                android:startColor="#33201A12"
+                android:endColor="#001A1510"
                 android:centerX="0.9"
                 android:centerY="0.9" />
         </shape>
     </item>
-    <!-- Orange gradient in top-left -->
     <item>
         <shape>
             <gradient
                 android:type="radial"
                 android:gradientRadius="400dp"
-                android:startColor="#4D5a3804"
-                android:endColor="#005a3804"
+                android:startColor="#30242225"
+                android:endColor="#00151417"
                 android:centerX="0.1"
                 android:centerY="0.2" />
         </shape>

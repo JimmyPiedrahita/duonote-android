@@ -5,18 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-        android:padding="12dp"
+        android:padding="14dp"
     android:gravity="center_vertical"
-    android:background="@drawable/bg_widget_item">
+    android:background="@color/widget_background">
 
     <TextView
         android:id="@+id/note_item_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-            android:textSize="18sp"
-        android:textColor="@color/text_primary"
-        android:lineSpacingMultiplier="1.4"
+            android:textSize="13sp"
+        android:textColor="@color/widget_text_pending"
         android:paddingEnd="8dp"/>
 
     <ImageButton
@@ -24,7 +23,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
         android:contentDescription="Open Link"
-        android:background="@drawable/bg_ripple_add_note"
+        android:background="@color/transparent"
         android:src="@drawable/ic_link"
         android:scaleType="centerInside"
             android:padding="5dp"
@@ -35,7 +34,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
         android:contentDescription="@string/description_button_copy"
-        android:background="@drawable/bg_ripple_add_note"
+        android:background="@color/transparent"
         android:src="@drawable/ic_copy_text"
         android:scaleType="centerInside"
             android:padding="5dp"
@@ -46,7 +45,7 @@
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:contentDescription="Delete Note"
-        android:background="@drawable/bg_ripple_add_note"
+        android:background="@color/transparent"
         android:src="@drawable/ic_delete"
         android:scaleType="centerInside"
         android:padding="5dp"/>

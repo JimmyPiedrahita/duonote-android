@@ -8,6 +8,7 @@
     tools:context=".LoginActivity">
 
     <ScrollView
+        android:id="@+id/loginScroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -15,159 +16,175 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="24dp">
+            android:paddingStart="28dp"
+            android:paddingTop="32dp"
+            android:paddingEnd="28dp"
+            android:paddingBottom="32dp">
 
-            <!-- App Logo/Title -->
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_duonote_logo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/tvAppTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginStart="10dp"
+                android:fontFamily="sans-serif"
                 android:text="DuoNote"
-                android:textSize="36sp"
-                android:textStyle="bold"
                 android:textColor="@color/text_primary"
-                android:fontFamily="sans-serif-medium"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@id/ivLogo"
+                app:layout_constraintStart_toEndOf="@id/ivLogo"
+                app:layout_constraintTop_toTopOf="@id/ivLogo" />
 
             <TextView
                 android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Sincroniza tus notas"
-                android:textSize="14sp"
+                android:layout_marginTop="178dp"
+                android:fontFamily="monospace"
+                android:letterSpacing="0.18"
+                android:text="TU ESPACIO PRIVADO"
                 android:textColor="@color/text_secondary"
-                app:layout_constraintTop_toBottomOf="@id/tvAppTitle"
+                android:textSize="10sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Card for QR Scanner -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardQrScan"
+            <TextView
+                android:id="@+id/tvLoginHeadline"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                app:cardBackgroundColor="@color/card_background"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/card_border"
-                app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif"
+                android:lineSpacingExtra="0dp"
+                android:text="Notas simples.\nSin ruido."
+                android:textColor="@color/text_primary"
+                android:textSize="43sp"
+                android:letterSpacing="-0.05"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/tvSubtitle" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center">
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Captura lo importante y continúa con tu día."
+                android:textColor="@color/text_secondary"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvLoginHeadline" />
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_qr_scan"
-                        app:tint="@color/text_primary"
-                        android:contentDescription="QR Icon" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCreateSession"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="40dp"
+                android:text="Crear nueva sesión   →"
+                android:textAllCaps="false"
+                android:textColor="@color/text_on_accent"
+                android:textSize="14sp"
+                app:backgroundTint="@color/accent_blue"
+                app:cornerRadius="14dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvDescription" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:text="Escanear Código QR"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnScanQR"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
-                        android:text="Abrir Escáner"
-                        android:textSize="15sp"
-                        android:textColor="@color/text_primary"
-                        app:backgroundTint="@color/button_background"
-                        app:cornerRadius="12dp"
-                        app:icon="@drawable/ic_menu_camera"
-                        app:iconGravity="textStart"
-                        app:iconTint="@color/text_primary" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Divider with OR -->
             <LinearLayout
-                android:id="@+id/dividerContainer"
+                android:id="@+id/loginConnectOptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                app:layout_constraintTop_toBottomOf="@id/cardQrScan"
+                android:weightSum="2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnCreateSession">
 
-                <View
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnScanQR"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
+                    android:layout_height="64dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    android:background="@color/divider_color" />
+                    android:text="Escanear código"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="10sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    app:backgroundTint="@color/button_background"
+                    app:cornerRadius="13dp"
+                    app:icon="@drawable/ic_menu_camera"
+                    app:iconGravity="textTop"
+                    app:iconTint="@color/text_primary" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:text="O"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_secondary" />
-
-                <View
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCodeConnection"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
-                    android:background="@color/divider_color" />
-
+                    android:text="Código de conexión"
+                    android:textAllCaps="false"
+                    android:textColor="@color/text_primary"
+                    android:textSize="10sp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    app:backgroundTint="@color/button_background"
+                    app:cornerRadius="13dp"
+                    app:icon="@drawable/ic_qr_scan"
+                    app:iconGravity="textTop"
+                    app:iconTint="@color/text_primary" />
             </LinearLayout>
 
-            <!-- Card for Manual Code -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardManualCode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/card_background"
                 app:cardCornerRadius="14dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="1dp"
                 app:strokeColor="@color/card_border"
-                app:layout_constraintTop_toBottomOf="@id/dividerContainer"
+                app:strokeWidth="1dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/loginConnectOptions">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="18dp">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Ingresar código manualmente"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_primary" />
+                    <ImageButton
+                        android:id="@+id/btnCloseManualCode"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="end"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="Ocultar código de conexión"
+                        android:padding="7dp"
+                        android:src="@drawable/ic_close"
+                        app:tint="@color/text_secondary" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilCode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         app:boxBackgroundColor="@color/input_background"
                         app:boxStrokeColor="@color/input_stroke"
@@ -177,57 +194,62 @@
                             android:id="@+id/etCode"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Código de conexión"
+                            android:hint="XXXX-XXXX-XXXX"
                             android:inputType="textVisiblePassword|textNoSuggestions"
                             android:maxLength="20"
                             android:textColor="@color/text_primary"
                             android:textSize="16sp"
-                            android:letterSpacing="0.2" />
-
+                            android:fontFamily="monospace"
+                            android:letterSpacing="0.12" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnConnect"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginTop="16dp"
+                        android:layout_marginTop="12dp"
                         android:text="Conectar"
-                        android:textSize="15sp"
                         android:textColor="@color/text_on_accent"
+                        android:textSize="13sp"
                         app:backgroundTint="@color/accent_blue"
                         app:cornerRadius="12dp" />
-
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Loading indicator -->
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:layout_marginTop="22dp"
                 android:indeterminateTint="@color/accent_blue"
-                app:layout_constraintTop_toBottomOf="@id/cardManualCode"
-                app:layout_constraintStart_toStartOf="parent"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="24dp" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cardManualCode" />
 
-            <!-- Status text -->
             <TextView
                 android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textSize="14sp"
+                android:layout_marginTop="12dp"
                 android:textColor="@color/text_secondary"
+                android:textSize="12sp"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/progressBar"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/progressBar" />
 
+            <TextView
+                android:id="@+id/tvPrivacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:text="Tus notas permanecen en este dispositivo."
+                android:textColor="#5D5E62"
+                android:textSize="10sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvStatus" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </ScrollView>
-
 </FrameLayout>

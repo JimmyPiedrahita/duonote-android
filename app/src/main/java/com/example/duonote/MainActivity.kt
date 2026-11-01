@@ -9,8 +9,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -36,6 +38,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnLogout: ImageButton
     private lateinit var emptyState: LinearLayout
     private lateinit var progressBar: ProgressBar
+    private lateinit var composerInput: EditText
+    private lateinit var composerSend: ImageButton
+    private lateinit var tvConnectionId: TextView
+    private lateinit var tvPendingCount: TextView
     private lateinit var qrDataStore: QRDataStore
     private lateinit var noteAdapter: NoteAdapter
     private val notesList = mutableListOf<Note>()
@@ -99,6 +105,10 @@ class MainActivity : AppCompatActivity() {
         btnLogout = findViewById(R.id.btnLogout)
         emptyState = findViewById(R.id.emptyState)
         progressBar = findViewById(R.id.progressBar)
+        composerInput = findViewById(R.id.composerInput)
+        composerSend = findViewById(R.id.composerSend)
+        tvConnectionId = findViewById(R.id.tvConnectionId)
+        tvPendingCount = findViewById(R.id.tvPendingCount)
 
         noteAdapter = NoteAdapter(notesList, 
             onNoteClick = { note -> toggleNoteCompletion(note) },
@@ -113,6 +123,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        composerSend.setOnClickListener {
+            addNoteFromComposer()
+        }
+
         btnAddWidget.setOnClickListener {
             addWidgetToHomeScreen()
         }
@@ -122,6 +136,39 @@ class MainActivity : AppCompatActivity() {
         }
 
         startFirebaseService()
+    }
+
+    private fun addNoteFromComposer() {
+        val noteText = composerInput.text.toString().trim()
+        val qrContent = currentQrContent
+        if (noteText.isEmpty() || qrContent.isNullOrEmpty()) return
+
+        composerSend.isEnabled = false
+        val db = FirebaseDatabase.getInstance()
+            .getReference("Connections")
+            .child(qrContent)
+            .child("Notes")
+        val noteId = db.push().key
+        if (noteId == null) {
+            composerSend.isEnabled = true
+            Toast.makeText(this, "No se pudo crear la nota", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        db.child(noteId).setValue(
+            mapOf(
+                "Text" to noteText,
+                "Timestamp" to System.currentTimeMillis(),
+                "IsCompleted" to false
+            )
+        ).addOnSuccessListener {
+            composerInput.text.clear()
+            composerSend.isEnabled = true
+            NoteWidget.updateWidget(applicationContext)
+        }.addOnFailureListener {
+            composerSend.isEnabled = true
+            Toast.makeText(this, "Error al agregar nota", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun addWidgetToHomeScreen() {
@@ -205,9 +252,11 @@ class MainActivity : AppCompatActivity() {
                 // Sort by timestamp descending (newest first)
                 notesList.sortByDescending { it.timestamp ?: 0L }
                 noteAdapter.notifyDataSetChanged()
+                tvConnectionId.text = qrContent
+                tvPendingCount.text = "${notesList.count { it.isCompleted != true }} pendientes"
                 
                 progressBar.visibility = View.GONE
-                fabAddNote.visibility = View.VISIBLE
+                fabAddNote.visibility = View.GONE
                 
                 // Show/hide empty state
                 if (notesList.isEmpty()) {

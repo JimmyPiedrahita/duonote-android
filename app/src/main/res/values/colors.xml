@@ -6,53 +6,53 @@
     
     <!-- DuoNote Desktop Theme Colors -->
     <!-- Background: #05070a with gradients -->
-    <color name="background_dark">#05070a</color>
+    <color name="background_dark">#090A0C</color>
     
     <!-- Text Colors -->
-    <color name="text_primary">#e0e0e0</color>
-    <color name="text_secondary">#6a6a6a</color>
-    <color name="text_on_accent">#ffffff</color>
+    <color name="text_primary">#F4F2ED</color>
+    <color name="text_secondary">#8B8C90</color>
+    <color name="text_on_accent">#17140D</color>
     
     <!-- Card Colors (glassmorphism style) -->
-    <color name="card_background">#0Dffffff</color> <!-- rgba(255,255,255,0.05) -->
-    <color name="card_background_hover">#1Affffff</color> <!-- rgba(255,255,255,0.1) -->
-    <color name="card_border">#1Affffff</color> <!-- rgba(255,255,255,0.1) -->
-    <color name="dialog_surface">#E611161D</color>
+    <color name="card_background">#121316</color>
+    <color name="card_background_hover">#17181B</color>
+    <color name="card_border">#292A2E</color>
+    <color name="dialog_surface">#121316</color>
     
     <!-- Button Colors -->
-    <color name="button_background">#0Dffffff</color>
-    <color name="button_background_pressed">#1Affffff</color>
+    <color name="button_background">#141518</color>
+    <color name="button_background_pressed">#222326</color>
     
     <!-- Accent Colors -->
-    <color name="accent_blue">#387eff</color>
-    <color name="accent_blue_transparent">#40387eff</color>
+    <color name="accent_blue">#D8B963</color>
+    <color name="accent_blue_transparent">#22D8B963</color>
     <color name="accent_orange">#5a3804</color>
     <color name="accent_orange_transparent">#4D5a3804</color>
     
     <!-- Input Colors -->
-    <color name="input_background">#0Dffffff</color>
-    <color name="input_stroke">#26ffffff</color>
-    <color name="input_stroke_focus">#805a9fd4</color>
+    <color name="input_background">#0C0D0F</color>
+    <color name="input_stroke">#313236</color>
+    <color name="input_stroke_focus">#D8B963</color>
     
     <!-- Divider -->
-    <color name="divider_color">#26ffffff</color>
+    <color name="divider_color">#292A2E</color>
     
     <!-- Link Color -->
-    <color name="link_color">#4da6ff</color>
+    <color name="link_color">#D8B963</color>
     
     <!-- Completed note -->
-    <color name="note_completed_text">#6a6a6a</color>
+    <color name="note_completed_text">#6D6E72</color>
     
     <!-- Modern Dark Theme Colors for Material3 -->
-    <color name="md_theme_dark_primary">#387eff</color>
-    <color name="md_theme_dark_onPrimary">#ffffff</color>
-    <color name="md_theme_dark_primaryContainer">#1a3a66</color>
-    <color name="md_theme_dark_onPrimaryContainer">#e0e0e0</color>
+    <color name="md_theme_dark_primary">#D8B963</color>
+    <color name="md_theme_dark_onPrimary">#17140D</color>
+    <color name="md_theme_dark_primaryContainer">#3A321C</color>
+    <color name="md_theme_dark_onPrimaryContainer">#F4F2ED</color>
     
-    <color name="md_theme_dark_secondary">#5a9fd4</color>
-    <color name="md_theme_dark_onSecondary">#05070a</color>
-    <color name="md_theme_dark_secondaryContainer">#1a2a3a</color>
-    <color name="md_theme_dark_onSecondaryContainer">#e0e0e0</color>
+    <color name="md_theme_dark_secondary">#B99A45</color>
+    <color name="md_theme_dark_onSecondary">#17140D</color>
+    <color name="md_theme_dark_secondaryContainer">#292516</color>
+    <color name="md_theme_dark_onSecondaryContainer">#F4F2ED</color>
     
     <color name="md_theme_dark_tertiary">#888888</color>
     <color name="md_theme_dark_onTertiary">#05070a</color>
@@ -64,21 +64,22 @@
     <color name="md_theme_dark_errorContainer">#3d1a1a</color>
     <color name="md_theme_dark_onErrorContainer">#ffcdd2</color>
     
-    <color name="md_theme_dark_background">#05070a</color>
-    <color name="md_theme_dark_onBackground">#e0e0e0</color>
-    <color name="md_theme_dark_surface">#0a0c10</color>
-    <color name="md_theme_dark_onSurface">#e0e0e0</color>
+    <color name="md_theme_dark_background">#090A0C</color>
+    <color name="md_theme_dark_onBackground">#F4F2ED</color>
+    <color name="md_theme_dark_surface">#121316</color>
+    <color name="md_theme_dark_onSurface">#F4F2ED</color>
     
-    <color name="md_theme_dark_surfaceVariant">#0Dffffff</color>
-    <color name="md_theme_dark_onSurfaceVariant">#e0e0e0</color>
-    <color name="md_theme_dark_outline">#1Affffff</color>
+    <color name="md_theme_dark_surfaceVariant">#141518</color>
+    <color name="md_theme_dark_onSurfaceVariant">#B6B5B0</color>
+    <color name="md_theme_dark_outline">#292A2E</color>
     
     <!-- Widget Colors (Matching App Theme) -->
-    <color name="widget_background">#05070a</color>
+    <color name="widget_background">#EFE7D2</color>
+    <color name="widget_toolbar_background">#D3C8B2</color>
     <color name="widget_background_pending">#0Dffffff</color>
     <color name="widget_background_completed">#08ffffff</color>
-    <color name="widget_text_pending">#e0e0e0</color>
-    <color name="widget_text_completed">#6a6a6a</color>
+    <color name="widget_text_pending">#38352F</color>
+    <color name="widget_text_completed">#8C887F</color>
 
     <!-- Legacy colors mapped to new theme -->
     <color name="color1">#0a0c10</color>
