@@ -74,12 +74,14 @@
     <color name="md_theme_dark_outline">#292A2E</color>
     
     <!-- Widget Colors (Matching App Theme) -->
-    <color name="widget_background">#EFE7D2</color>
-    <color name="widget_toolbar_background">#D3C8B2</color>
-    <color name="widget_background_pending">#0Dffffff</color>
-    <color name="widget_background_completed">#08ffffff</color>
-    <color name="widget_text_pending">#38352F</color>
-    <color name="widget_text_completed">#8C887F</color>
+    <color name="widget_background">#111214</color>
+    <color name="widget_header_background">#191A1D</color>
+    <color name="widget_toolbar_background">#0D0E10</color>
+    <color name="widget_background_pending">#191A1D</color>
+    <color name="widget_background_completed">#151619</color>
+    <color name="widget_text_pending">#D9D8D3</color>
+    <color name="widget_text_completed">#74757A</color>
+    <color name="widget_action">#8C8D91</color>
 
     <!-- Legacy colors mapped to new theme -->
     <color name="color1">#0a0c10</color>
