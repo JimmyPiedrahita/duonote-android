@@ -118,7 +118,7 @@ class FirebaseListenerService : Service() {
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("DuoNote activo")
             .setContentText("Sincronizando notas en tiempo real...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.drawable.ic_notification)
             .setOngoing(true)
             .build()
         startForeground(1, notification)

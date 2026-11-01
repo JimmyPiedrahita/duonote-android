@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
+    <color name="launcher_background">#FF000000</color>
     
     <!-- DuoNote Desktop Theme Colors -->
     <!-- Background: #05070a with gradients -->
