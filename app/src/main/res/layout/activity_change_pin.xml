@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/changePinRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_main"
@@ -9,9 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingTop="18dp"
-        android:paddingEnd="20dp"
+        android:paddingStart="18dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="18dp"
         android:paddingBottom="32dp">
 
         <ImageButton
@@ -50,6 +51,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:text="Tu app está protegida"
                 android:textColor="@color/text_primary"
@@ -58,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:maxWidth="320dp"
                 android:text="Solicita tu PIN o huella dactilar cada vez que vuelvas a DuoNote."
@@ -92,30 +95,30 @@
         <EditText
             android:id="@+id/etCurrentPin"
             style="@style/SecurityPinInput"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:hint="••••"
             android:inputType="numberPassword"
             android:maxLength="6" />
 
-        <TextView style="@style/SecurityLabel" android:layout_marginTop="16dp" android:text="NUEVO PIN" />
+        <TextView style="@style/SecurityLabel" android:layout_marginTop="18dp" android:text="NUEVO PIN" />
         <EditText
             android:id="@+id/etNewPin"
             style="@style/SecurityPinInput"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:hint="••••"
             android:inputType="numberPassword"
             android:maxLength="6" />
 
-        <TextView style="@style/SecurityLabel" android:layout_marginTop="16dp" android:text="CONFIRMA EL NUEVO PIN" />
+        <TextView style="@style/SecurityLabel" android:layout_marginTop="18dp" android:text="CONFIRMA EL NUEVO PIN" />
         <EditText
             android:id="@+id/etNewPinConfirmation"
             style="@style/SecurityPinInput"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:hint="••••"
             android:inputType="numberPassword"
             android:maxLength="6" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveNewPin"
             style="@style/SecurityPrimaryButton"
             android:layout_marginTop="18dp"

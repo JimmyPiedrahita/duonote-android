@@ -3,7 +3,10 @@ package com.example.duonote
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 
 class ChangePinActivity : AppCompatActivity() {
     private lateinit var store: SecurityStore
@@ -13,8 +16,14 @@ class ChangePinActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         store = SecurityStore(this)
         setContentView(R.layout.activity_change_pin)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.changePinRoot)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         currentPin = findViewById(R.id.etCurrentPin)
         newPin = findViewById(R.id.etNewPin)

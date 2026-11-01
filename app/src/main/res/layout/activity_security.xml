@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/securityRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_main"
@@ -9,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingTop="18dp"
-        android:paddingEnd="20dp"
+        android:paddingStart="18dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="18dp"
         android:paddingBottom="42dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="42dp"
             android:gravity="center_vertical">
             <ImageButton
                 android:id="@+id/btnSecurityBack"
@@ -31,6 +33,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:text="Seguridad"
                 android:textColor="@color/text_primary"
@@ -42,7 +45,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
             <ImageView
@@ -66,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:textColor="@color/text_primary"
                 android:textSize="25sp"
@@ -75,6 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:maxWidth="320dp"
                 android:text="Solicita tu PIN o huella dactilar cada vez que vuelvas a DuoNote."
@@ -92,25 +97,24 @@
             <EditText
                 android:id="@+id/etSetupPin"
                 style="@style/SecurityPinInput"
+                android:layout_marginTop="10dp"
                 android:hint="••••"
                 android:inputType="numberPassword"
                 android:maxLength="6" />
-            <TextView style="@style/SecurityLabel" android:layout_marginTop="16dp" android:text="CONFIRMA TU PIN" />
+            <TextView style="@style/SecurityLabel" android:layout_marginTop="18dp" android:text="CONFIRMA TU PIN" />
             <EditText
                 android:id="@+id/etSetupConfirmation"
                 style="@style/SecurityPinInput"
+                android:layout_marginTop="10dp"
                 android:hint="••••"
                 android:inputType="numberPassword"
                 android:maxLength="6" />
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreatePin"
                 style="@style/SecurityPrimaryButton"
                 android:layout_marginTop="18dp"
-                android:drawableStart="@drawable/ic_lock"
-                android:drawableTint="@color/text_on_accent"
-                android:drawablePadding="8dp"
-                android:gravity="center"
-                android:text="Activar bloqueo" />
+                android:text="Activar bloqueo"
+                app:icon="@drawable/ic_lock" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,7 +163,12 @@
                 </LinearLayout>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="→" android:textColor="@color/text_secondary" android:textSize="18sp" />
             </LinearLayout>
-            <Button android:id="@+id/btnLockNow" style="@style/SecurityPrimaryButton" android:layout_marginTop="16dp" android:drawableStart="@drawable/ic_lock" android:drawableTint="@color/text_on_accent" android:drawablePadding="8dp" android:gravity="center" android:text="Bloquear ahora" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLockNow"
+                style="@style/SecurityPrimaryButton"
+                android:layout_marginTop="16dp"
+                android:text="Bloquear ahora"
+                app:icon="@drawable/ic_lock" />
             <TextView android:id="@+id/btnDisableSecurity" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center" android:text="Desactivar bloqueo" android:textColor="@color/error_muted" android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
