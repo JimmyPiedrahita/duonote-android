@@ -3,6 +3,7 @@ package com.example.duonote
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,7 +17,10 @@ class ChangePinActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        )
         store = SecurityStore(this)
         setContentView(R.layout.activity_change_pin)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.changePinRoot)) { v, insets ->

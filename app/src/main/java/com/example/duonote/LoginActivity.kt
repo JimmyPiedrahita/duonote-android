@@ -16,6 +16,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ScrollView
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -72,7 +73,10 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        )
 
         qrDataStore = QRDataStore(this)
         
@@ -107,8 +111,14 @@ class LoginActivity : AppCompatActivity() {
         tvStatus = findViewById(R.id.tvStatus)
         loginScroll = findViewById(R.id.loginScroll)
         ViewCompat.setOnApplyWindowInsetsListener(loginScroll) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
-            view.setPadding(view.paddingLeft, view.paddingTop, view.paddingRight, imeInsets.bottom + 24)
+            view.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                maxOf(systemBars.bottom, imeInsets.bottom) + 24
+            )
             if (insets.isVisible(WindowInsetsCompat.Type.ime())) {
                 view.postDelayed({ ensureCodeFieldVisible() }, 100)
             }
@@ -159,6 +169,13 @@ class LoginActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnContinueSession).setOnClickListener {
             connectWithCode(code)
         }
+        val root = findViewById<View>(R.id.createdSessionRoot)
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        ViewCompat.requestApplyInsets(root)
     }
 
     private fun createQrBitmap(content: String): Bitmap {

@@ -15,7 +15,7 @@ class ScannerOverlayView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr) {
 
     private val paintBackground = Paint().apply {
-        color = Color.parseColor("#80050A0A") // El color oscuro semitransparente original
+        color = context.getColor(R.color.scanner_overlay)
         style = Paint.Style.FILL
     }
 

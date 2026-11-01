@@ -1,10 +1,3 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.DuoNote" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/accent_blue</item>
-        <item name="colorOnPrimary">@color/text_on_accent</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:statusBarColor">@color/background_dark</item>
-        <item name="android:navigationBarColor">@color/background_dark</item>
-    </style>
+<resources>
+    <!-- The DuoNote theme is dark-only; see values/themes.xml. -->
 </resources>

@@ -77,6 +77,11 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
             R.drawable.bg_ripple_note_pending
         }
         views.setInt(R.id.widget_item_container, "setBackgroundResource", backgroundResId)
+        views.setFloat(
+            R.id.widget_item_container,
+            "setAlpha",
+            if (note.isCompleted == true) 0.55f else 1f
+        )
         
         if (note.isCompleted == true) {
             views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.widget_text_completed))

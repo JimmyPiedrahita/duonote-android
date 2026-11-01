@@ -11,6 +11,7 @@
     <!-- Text Colors -->
     <color name="text_primary">#F4F2ED</color>
     <color name="text_secondary">#8B8C90</color>
+    <color name="text_muted">#5D5E62</color>
     <color name="text_on_accent">#17140D</color>
     
     <!-- Card Colors (glassmorphism style) -->
@@ -26,6 +27,10 @@
     <!-- Accent Colors -->
     <color name="accent_blue">#D8B963</color>
     <color name="accent_blue_transparent">#22D8B963</color>
+    <color name="accent_soft">#1AD8B963</color>
+    <color name="accent_soft_stroke">#664B432D</color>
+    <color name="accent_stroke">#4B432D</color>
+    <color name="accent_disabled">#40D8B963</color>
     <color name="accent_orange">#5a3804</color>
     <color name="accent_orange_transparent">#4D5a3804</color>
     
@@ -36,6 +41,15 @@
     
     <!-- Divider -->
     <color name="divider_color">#292A2E</color>
+
+    <!-- Control / state colors -->
+    <color name="control_track">#303136</color>
+    <color name="control_thumb">#77787C</color>
+    <color name="success_background">#17241A</color>
+    <color name="success_border">#334638</color>
+    <color name="note_completed_background">#0E0F11</color>
+    <color name="note_completed_border">#242529</color>
+    <color name="scanner_overlay">#B3050506</color>
     
     <!-- Link Color -->
     <color name="link_color">#D8B963</color>

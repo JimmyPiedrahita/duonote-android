@@ -26,15 +26,19 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="sans-serif"
+            android:letterSpacing="-0.02"
             android:text="Mis notas"
             android:textColor="@color/widget_text_pending"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/widget_note_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:letterSpacing="0.12"
             android:text="NOTAS"
             android:textColor="@color/widget_text_completed"
             android:textSize="8sp" />
@@ -71,6 +75,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
                 android:text="@string/widget_empty"
                 android:textColor="@color/widget_text_pending"
                 android:textSize="12sp"
@@ -80,6 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif"
                 android:text="@string/widget_empty_hint"
                 android:textColor="@color/widget_text_completed"
                 android:textSize="9sp" />
@@ -108,14 +114,17 @@
                 android:background="@color/transparent"
                 android:contentDescription="Toggle visibility"
                 android:padding="6dp"
-                android:src="@drawable/ic_visibility_on" />
+                android:src="@drawable/ic_visibility_on"
+                android:tint="@color/widget_action" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
                 android:text="@string/widget_hide"
                 android:textColor="@color/widget_text_completed"
-                android:textSize="8sp" />
+                android:textSize="8sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -132,14 +141,17 @@
                 android:background="@color/transparent"
                 android:contentDescription="Refresh notes"
                 android:padding="6dp"
-                android:src="@drawable/ic_refresh_widget" />
+                android:src="@drawable/ic_refresh_widget"
+                android:tint="@color/widget_action" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="sans-serif"
                 android:text="@string/widget_refresh"
                 android:textColor="@color/widget_text_completed"
-                android:textSize="8sp" />
+                android:textSize="8sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -161,7 +173,8 @@
                     android:contentDescription="@string/description_button_add"
                     android:paddingTop="4dp"
                     android:paddingBottom="16dp"
-                    android:src="@drawable/ic_add_notes" />
+                    android:src="@drawable/ic_add_notes"
+                    android:tint="@color/text_on_accent" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -169,9 +182,11 @@
                     android:layout_gravity="bottom"
                     android:gravity="center"
                     android:paddingBottom="5dp"
+                    android:fontFamily="sans-serif"
                     android:text="@string/widget_add"
                     android:textColor="@color/text_on_accent"
-                    android:textSize="8sp" />
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

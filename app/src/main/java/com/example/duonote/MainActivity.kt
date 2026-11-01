@@ -19,6 +19,7 @@ import android.widget.TextView
 import android.widget.Toast
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -70,7 +71,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+        )
         focusComposerRequested = intent.action == ACTION_FOCUS_COMPOSER
         setContentView(R.layout.activity_main)
 
@@ -343,7 +347,8 @@ class MainActivity : AppCompatActivity() {
                 notesList.sortByDescending { it.timestamp ?: 0L }
                 noteAdapter.notifyDataSetChanged()
                 tvConnectionId.text = qrContent
-                tvPendingCount.text = "${notesList.count { it.isCompleted != true }} pendientes"
+                val pending = notesList.count { it.isCompleted != true }
+                tvPendingCount.text = if (pending == 1) "1 pendiente" else "$pending pendientes"
                 
                 progressBar.visibility = View.GONE
                 fabAddNote.visibility = View.GONE

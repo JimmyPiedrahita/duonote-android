@@ -59,32 +59,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:fontFamily="monospace"
-                android:letterSpacing="0.18"
-                android:text="PROTECCIÓN DE ACCESO"
-                android:textColor="@color/text_secondary"
-                android:textSize="9sp" />
+                style="@style/DuoNote.Text.Eyebrow"
+                android:text="PROTECCIÓN DE ACCESO" />
             <TextView
                 android:id="@+id/tvHeroTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center"
-                android:textColor="@color/text_primary"
-                android:textSize="25sp"
-                android:letterSpacing="-0.03"
-                android:textStyle="normal" />
+                style="@style/DuoNote.Text.ScreenTitle"
+                android:layout_marginTop="12dp" />
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/DuoNote.Text.Body"
                 android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center"
                 android:maxWidth="320dp"
-                android:text="Solicita tu PIN o huella dactilar cada vez que vuelvas a DuoNote."
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp" />
+                android:text="Solicita tu PIN o huella dactilar cada vez que vuelvas a DuoNote." />
         </LinearLayout>
 
         <LinearLayout

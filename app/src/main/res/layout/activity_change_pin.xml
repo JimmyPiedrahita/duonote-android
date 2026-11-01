@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/changePinRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,20 +16,41 @@
         android:paddingEnd="18dp"
         android:paddingBottom="32dp">
 
-        <ImageButton
-            android:id="@+id/btnChangePinBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_button_header"
-            android:contentDescription="Volver"
-            android:padding="11dp"
-            android:src="@drawable/ic_back"
-            android:tint="@color/text_secondary" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/btnChangePinBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_button_header"
+                android:contentDescription="Volver"
+                android:padding="11dp"
+                android:src="@drawable/ic_back"
+                android:tint="@color/text_secondary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif"
+                android:gravity="center"
+                android:text="Cambiar PIN"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="30dp"
             android:gravity="center_horizontal"
             android:orientation="vertical">
             <ImageView
@@ -39,56 +61,18 @@
                 android:src="@drawable/ic_security_shield"
                 android:tint="@color/accent_blue" />
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/DuoNote.Text.Eyebrow"
                 android:layout_marginTop="18dp"
-                android:fontFamily="monospace"
-                android:letterSpacing="0.18"
-                android:text="PROTECCIÓN DE ACCESO"
-                android:textColor="@color/text_secondary"
-                android:textSize="9sp" />
+                android:text="PROTECCIÓN DE ACCESO" />
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/DuoNote.Text.ScreenTitle"
                 android:layout_marginTop="12dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center"
-                android:text="Tu app está protegida"
-                android:textColor="@color/text_primary"
-                android:textSize="25sp" />
+                android:text="Confirma tu identidad" />
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                style="@style/DuoNote.Text.Body"
                 android:layout_marginTop="10dp"
-                android:fontFamily="sans-serif"
-                android:gravity="center"
                 android:maxWidth="320dp"
-                android:text="Solicita tu PIN o huella dactilar cada vez que vuelvas a DuoNote."
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            style="@style/SecurityCard"
-            android:layout_marginTop="30dp"
-            android:gravity="center_vertical"
-            android:padding="14dp">
-            <ImageView
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:background="@drawable/bg_security_icon"
-                android:padding="11dp"
-                android:src="@drawable/ic_lock"
-                android:tint="@color/accent_blue" />
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="13dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView style="@style/SecurityCardTitle" android:text="Cambiar PIN" />
-                <TextView style="@style/SecurityCardSubtitle" android:text="Confirma tu identidad antes de crear uno nuevo." />
-            </LinearLayout>
+                android:text="Actualiza tu código de desbloqueo." />
         </LinearLayout>
 
         <TextView style="@style/SecurityLabel" android:layout_marginTop="26dp" android:text="PIN ACTUAL" />
@@ -122,14 +106,15 @@
             android:id="@+id/btnSaveNewPin"
             style="@style/SecurityPrimaryButton"
             android:layout_marginTop="18dp"
-            android:text="Guardar nuevo PIN" />
+            android:text="Guardar nuevo PIN"
+            app:icon="@drawable/ic_lock" />
         <TextView
             android:id="@+id/btnCancelPinChange"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:gravity="center"
             android:text="Cancelar"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/text_muted"
             android:textSize="10sp" />
     </LinearLayout>
 </ScrollView>

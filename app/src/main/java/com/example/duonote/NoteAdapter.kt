@@ -68,10 +68,12 @@ class NoteAdapter(
             holder.tvNoteText.paintFlags = holder.tvNoteText.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.note_completed_text))
             holder.noteContainer.setBackgroundResource(R.drawable.bg_note_card_completed)
+            holder.noteContainer.alpha = 0.55f
         } else {
             holder.tvNoteText.paintFlags = holder.tvNoteText.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             holder.tvNoteText.setTextColor(holder.itemView.context.getColor(R.color.text_primary))
             holder.noteContainer.setBackgroundResource(R.drawable.bg_note_card)
+            holder.noteContainer.alpha = 1f
         }
 
         holder.noteContainer.setOnClickListener {

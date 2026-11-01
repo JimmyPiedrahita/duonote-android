@@ -1,116 +1,124 @@
 package com.example.duonote
 
+import android.content.Intent
 import android.os.Bundle
-import android.text.InputType
-import android.view.ViewGroup
-import android.widget.Button
+import android.view.View
 import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.FragmentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.launch
 
 class AuthActivity : FragmentActivity() {
     private lateinit var securityStore: SecurityStore
     private lateinit var pinInput: EditText
+    private lateinit var confirmationInput: EditText
+    private lateinit var primaryButton: MaterialButton
+    private lateinit var biometricButton: MaterialButton
+    private lateinit var logoutButton: TextView
+    private lateinit var eyebrow: TextView
+    private lateinit var title: TextView
+    private lateinit var subtitle: TextView
+    private lateinit var pinLabel: TextView
+    private lateinit var confirmLabel: TextView
+
     private var mode: String = MODE_APP_ENTRY
     private var setupMode = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        )
         securityStore = SecurityStore(this)
         mode = intent.getStringExtra(EXTRA_MODE) ?: MODE_APP_ENTRY
         setupMode = intent.getBooleanExtra(EXTRA_SETUP, false)
-        showContent()
+
+        setContentView(R.layout.activity_auth)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.authRoot)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        bindViews()
+        configureScreen()
         if (!setupMode) offerBiometric()
     }
 
-    private fun showContent() {
-        val padding = (24 * resources.displayMetrics.density).toInt()
-        val container = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(padding, padding, padding, padding)
-            gravity = android.view.Gravity.CENTER_HORIZONTAL
-            setBackgroundResource(R.drawable.bg_gradient_main)
-        }
-        container.addView(ImageView(this).apply {
-            setImageResource(R.drawable.ic_duonote_logo)
-        }, LinearLayout.LayoutParams(dp(52), dp(52)).apply { topMargin = dp(28); bottomMargin = dp(34) })
-        container.addView(TextView(this).apply {
-            text = if (setupMode) "PROTECCIÓN DE ACCESO" else "APP BLOQUEADA"
-            textSize = 10f
-            letterSpacing = .16f
-            setTextColor(getColor(R.color.text_secondary))
-        })
-        container.addView(TextView(this).apply {
-            text = if (setupMode) "Crea tu PIN" else "Bienvenido de nuevo"
-            textSize = 28f
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
-            setTextColor(getColor(R.color.text_primary))
-            gravity = android.view.Gravity.CENTER
-        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
-        container.addView(TextView(this).apply {
-            text = if (setupMode) "Protege tus notas con un código de 4 a 6 dígitos." else "Ingresa tu PIN para acceder a tus notas."
-            textSize = 12f
-            setTextColor(getColor(R.color.text_secondary))
-            gravity = android.view.Gravity.CENTER
-        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10); bottomMargin = dp(26) })
+    private fun bindViews() {
+        pinInput = findViewById(R.id.etAuthPin)
+        confirmationInput = findViewById(R.id.etAuthConfirmation)
+        primaryButton = findViewById(R.id.btnAuthPrimary)
+        biometricButton = findViewById(R.id.btnAuthBiometric)
+        logoutButton = findViewById(R.id.btnAuthLogout)
+        eyebrow = findViewById(R.id.tvAuthEyebrow)
+        title = findViewById(R.id.tvAuthTitle)
+        subtitle = findViewById(R.id.tvAuthSubtitle)
+        pinLabel = findViewById(R.id.tvAuthPinLabel)
+        confirmLabel = findViewById(R.id.tvAuthConfirmLabel)
+    }
 
+    private fun configureScreen() {
         if (setupMode) {
-            val first = pinField("PIN de 4 a 6 dígitos")
-            val confirmation = pinField("Confirmar PIN")
-            container.addView(first)
-            container.addView(confirmation, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(62)).apply { topMargin = dp(10) })
-            val save = Button(this).apply {
-                text = "Guardar PIN"
-                isAllCaps = false
-                setTextColor(getColor(R.color.text_on_accent))
-                background = getDrawable(R.drawable.bg_security_primary)
-                setOnClickListener {
-                    val pin = first.text.toString()
-                    if (!pin.matches(Regex("\\d{4,6}"))) {
-                        first.error = "Usa entre 4 y 6 dígitos"
-                    } else if (pin != confirmation.text.toString()) {
-                        confirmation.error = "Los PIN no coinciden"
-                    } else {
-                        securityStore.savePin(pin)
-                        securityStore.setWidgetRevealed(false)
-                        finishSuccess(revealWidget = false)
-                    }
-                }
-            }
-            container.addView(save)
+            eyebrow.text = "PROTECCIÓN DE ACCESO"
+            title.text = "Crea tu PIN"
+            subtitle.text = "Protege tus notas con un código de 4 a 6 dígitos."
+            pinLabel.text = "CREA UN PIN"
+            confirmLabel.text = "CONFIRMA TU PIN"
+            primaryButton.text = "Guardar PIN"
+            primaryButton.setIconResource(R.drawable.ic_lock)
+            biometricButton.visibility = View.GONE
+            logoutButton.visibility = View.GONE
+            primaryButton.setOnClickListener { savePin() }
         } else {
-            pinInput = pinField("PIN")
-            container.addView(pinInput)
-            val unlock = Button(this).apply {
-                text = "Desbloquear con PIN"
-                isAllCaps = false
-                setTextColor(getColor(R.color.text_on_accent))
-                background = getDrawable(R.drawable.bg_security_primary)
-                setOnClickListener { verifyPin() }
-            }
-            container.addView(unlock)
+            eyebrow.text = "APP BLOQUEADA"
+            title.text = "Bienvenido de nuevo"
+            subtitle.text = "Ingresa tu PIN para acceder a tus notas."
+            pinLabel.visibility = View.GONE
+            confirmLabel.visibility = View.GONE
+            confirmationInput.visibility = View.GONE
+            primaryButton.text = "Desbloquear"
+            primaryButton.setIconResource(R.drawable.ic_input_arrow)
+            primaryButton.setOnClickListener { verifyPin() }
+            logoutButton.visibility = if (mode == MODE_APP_ENTRY) View.VISIBLE else View.GONE
+            logoutButton.setOnClickListener { confirmLogout() }
+            biometricButton.setOnClickListener { offerBiometric() }
+            updateBiometricButton()
         }
-        setContentView(container)
     }
 
-    private fun pinField(hintText: String): EditText = EditText(this).apply {
-        hint = hintText
-        inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-        maxLines = 1
-        textSize = 20f
-        gravity = android.view.Gravity.CENTER
-        setHintTextColor(getColor(R.color.text_secondary))
-        background = getDrawable(R.drawable.bg_security_input)
-        setTextColor(getColor(R.color.text_primary))
+    private fun updateBiometricButton() {
+        val visible = securityStore.isBiometricEnabled() && biometricAvailable()
+        biometricButton.visibility = if (visible) View.VISIBLE else View.GONE
     }
 
-    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
+    private fun savePin() {
+        val pin = pinInput.text.toString()
+        when {
+            !pin.matches(Regex("\\d{4,6}")) ->
+                pinInput.error = "Usa entre 4 y 6 dígitos"
+            pin != confirmationInput.text.toString() ->
+                confirmationInput.error = "Los PIN no coinciden"
+            else -> {
+                securityStore.savePin(pin)
+                securityStore.setWidgetRevealed(false)
+                NoteWidget.updateWidget(this)
+                finishSuccess(revealWidget = false)
+            }
+        }
+    }
 
     private fun verifyPin() {
         if (securityStore.verifyPin(pinInput.text.toString())) {
@@ -121,10 +129,10 @@ class AuthActivity : FragmentActivity() {
     }
 
     private fun offerBiometric() {
-        val manager = BiometricManager.from(this)
-        val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG
-        if (!securityStore.isBiometricEnabled() ||
-            manager.canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) return
+        if (!securityStore.isBiometricEnabled() || !biometricAvailable()) {
+            updateBiometricButton()
+            return
+        }
 
         val prompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {
@@ -145,6 +153,35 @@ class AuthActivity : FragmentActivity() {
             .setNegativeButtonText("Usar PIN")
             .build()
         prompt.authenticate(info)
+    }
+
+    private fun biometricAvailable() =
+        BiometricManager.from(this).canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) ==
+            BiometricManager.BIOMETRIC_SUCCESS
+
+    private fun confirmLogout() {
+        MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+            .setTitle("Cerrar sesión")
+            .setMessage("¿Quieres cerrar la sesión de DuoNote en este dispositivo?")
+            .setNegativeButton("Cancelar", null)
+            .setPositiveButton("Cerrar sesión") { _, _ -> performLogout() }
+            .show()
+    }
+
+    private fun performLogout() {
+        lifecycleScope.launch {
+            QRDataStore(this@AuthActivity).clearQRContent()
+            securityStore.clear()
+            AppSecuritySession.appUnlocked = false
+            stopService(Intent(this@AuthActivity, FirebaseListenerService::class.java))
+            NoteWidget.updateWidget(this@AuthActivity)
+
+            val intent = Intent(this@AuthActivity, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun finishSuccess(revealWidget: Boolean) {

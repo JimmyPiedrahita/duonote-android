@@ -20,6 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="sans-serif"
             android:textSize="14sp"
             android:textColor="@color/text_primary"
             android:lineSpacingMultiplier="1.5"
@@ -31,6 +32,7 @@
             android:layout_height="32dp"
             android:contentDescription="Open Link"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
             android:src="@drawable/ic_link"
             app:tint="@color/text_secondary"
             android:visibility="gone"
@@ -42,6 +44,7 @@
             android:layout_height="32dp"
             android:contentDescription="Copy Note"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
             android:src="@drawable/ic_copy_text"
             android:layout_marginEnd="4dp"
             app:tint="@color/text_secondary"/>
@@ -52,6 +55,7 @@
             android:layout_height="32dp"
             android:contentDescription="Delete Note"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="4dp"
             android:src="@drawable/ic_delete"
             app:tint="@color/text_secondary"/>
 
