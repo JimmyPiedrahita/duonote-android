@@ -6,6 +6,9 @@ import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -30,6 +33,9 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.common.BitMatrix
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -45,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var composerSend: ImageButton
     private lateinit var tvConnectionId: TextView
     private lateinit var tvPendingCount: TextView
+    private lateinit var connectionCard: View
     private lateinit var qrDataStore: QRDataStore
     private lateinit var noteAdapter: NoteAdapter
     private val notesList = mutableListOf<Note>()
@@ -139,6 +146,7 @@ class MainActivity : AppCompatActivity() {
         composerSend = findViewById(R.id.composerSend)
         tvConnectionId = findViewById(R.id.tvConnectionId)
         tvPendingCount = findViewById(R.id.tvPendingCount)
+        connectionCard = findViewById(R.id.connectionCard)
 
         noteAdapter = NoteAdapter(notesList, 
             onNoteClick = { note -> toggleNoteCompletion(note) },
@@ -176,7 +184,48 @@ class MainActivity : AppCompatActivity() {
             showLogoutConfirmation()
         }
 
+        connectionCard.setOnClickListener {
+            currentQrContent?.let { showConnectionQr(it) }
+        }
+
         startFirebaseService()
+    }
+
+    private fun showConnectionQr(code: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_connection_qr, null)
+        dialogView.findViewById<android.widget.ImageView>(R.id.ivConnectionQr)
+            .setImageBitmap(createQrBitmap(code))
+        dialogView.findViewById<TextView>(R.id.tvDialogConnectionCode).text = code
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .create()
+        dialogView.findViewById<com.google.android.material.button.MaterialButton>(
+            R.id.btnCloseConnectionQr
+        ).setOnClickListener { dialog.dismiss() }
+        dialog.show()
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog.window?.setLayout(
+            android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+    }
+
+    private fun createQrBitmap(content: String): Bitmap {
+        val matrix: BitMatrix = MultiFormatWriter().encode(
+            content,
+            BarcodeFormat.QR_CODE,
+            640,
+            640,
+            mapOf(com.google.zxing.EncodeHintType.MARGIN to 1)
+        )
+        val bitmap = Bitmap.createBitmap(matrix.width, matrix.height, Bitmap.Config.ARGB_8888)
+        for (x in 0 until matrix.width) {
+            for (y in 0 until matrix.height) {
+                bitmap.setPixel(x, y, if (matrix[x, y]) Color.BLACK else Color.WHITE)
+            }
+        }
+        return bitmap
     }
 
     private fun addNoteFromComposer() {

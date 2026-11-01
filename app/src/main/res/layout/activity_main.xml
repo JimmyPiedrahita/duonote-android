@@ -96,27 +96,6 @@
                     app:tint="@color/text_primary" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:text="PANEL PRINCIPAL"
-                android:textColor="@color/text_secondary"
-                android:textSize="10sp"
-                android:letterSpacing="0.16" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="24dp"
-                android:fontFamily="sans-serif"
-                android:lineSpacingExtra="0dp"
-                android:text="Tus notas,\nsiempre cerca."
-                android:textColor="@color/text_primary"
-                android:textSize="34sp"
-                android:letterSpacing="-0.04" />
-
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/connectionCard"
                 android:layout_width="match_parent"
@@ -254,15 +233,6 @@
                         app:tint="@color/text_on_accent" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
-                android:text="Notas recientes"
-                android:textColor="@color/text_primary"
-                android:textSize="17sp"
-                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvNotes"

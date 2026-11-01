@@ -48,6 +48,7 @@ dependencies {
     
     // ML Kit Barcode Scanning (Bundled)
     implementation(libs.barcode.scanning)
+    implementation(libs.zxing.core)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.graphics.Rect
+import android.graphics.Bitmap
+import android.graphics.Color
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -23,6 +25,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.database.FirebaseDatabase
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.common.BitMatrix
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -145,6 +150,34 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    private fun showCreatedSession(code: String) {
+        setContentView(R.layout.activity_created_session)
+
+        val qrCode = findViewById<android.widget.ImageView>(R.id.ivSessionQr)
+        qrCode.setImageBitmap(createQrBitmap(code))
+        findViewById<TextView>(R.id.tvSessionCode).text = code
+        findViewById<Button>(R.id.btnContinueSession).setOnClickListener {
+            connectWithCode(code)
+        }
+    }
+
+    private fun createQrBitmap(content: String): Bitmap {
+        val matrix: BitMatrix = MultiFormatWriter().encode(
+            content,
+            BarcodeFormat.QR_CODE,
+            640,
+            640,
+            mapOf(com.google.zxing.EncodeHintType.MARGIN to 1)
+        )
+        val bitmap = Bitmap.createBitmap(matrix.width, matrix.height, Bitmap.Config.ARGB_8888)
+        for (x in 0 until matrix.width) {
+            for (y in 0 until matrix.height) {
+                bitmap.setPixel(x, y, if (matrix[x, y]) Color.BLACK else Color.WHITE)
+            }
+        }
+        return bitmap
+    }
+
     private fun ensureCodeFieldVisible() {
         val fieldRect = Rect()
         etCode.getGlobalVisibleRect(fieldRect)
@@ -159,7 +192,7 @@ class LoginActivity : AppCompatActivity() {
     private fun createSession() {
         val code = List(3) { (1..4).map { ('A'..'Z').random() }.joinToString("") }
             .joinToString("-")
-        connectWithCode(code)
+        showCreatedSession(code)
     }
 
     private fun connectWithCode(code: String) {
