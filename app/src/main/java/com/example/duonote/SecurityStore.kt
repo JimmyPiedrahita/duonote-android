@@ -15,6 +15,12 @@ class SecurityStore(context: Context) {
 
     fun hasPin(): Boolean = preferences.contains(PIN_CIPHERTEXT)
 
+    fun isBiometricEnabled(): Boolean = preferences.getBoolean(BIOMETRIC_ENABLED, false)
+
+    fun setBiometricEnabled(enabled: Boolean) {
+        preferences.edit().putBoolean(BIOMETRIC_ENABLED, enabled).apply()
+    }
+
     fun isWidgetRevealed(): Boolean = preferences.getBoolean(WIDGET_REVEALED, true)
 
     fun setWidgetRevealed(revealed: Boolean) {
@@ -22,7 +28,7 @@ class SecurityStore(context: Context) {
     }
 
     fun savePin(pin: String) {
-        require(pin.matches(Regex("\\d{4}")))
+        require(pin.matches(Regex("\\d{4,6}")))
         val encrypted = encrypt(pin.toByteArray(StandardCharsets.UTF_8))
         preferences.edit()
             .putString(PIN_CIPHERTEXT, Base64.encodeToString(encrypted, Base64.NO_WRAP))
@@ -30,7 +36,7 @@ class SecurityStore(context: Context) {
     }
 
     fun verifyPin(pin: String): Boolean {
-        if (!pin.matches(Regex("\\d{4}"))) return false
+        if (!pin.matches(Regex("\\d{4,6}"))) return false
         val encoded = preferences.getString(PIN_CIPHERTEXT, null) ?: return false
         return try {
             val encrypted = Base64.decode(encoded, Base64.NO_WRAP)
@@ -52,6 +58,7 @@ class SecurityStore(context: Context) {
         private const val PREFERENCES = "security_prefs"
         private const val PIN_CIPHERTEXT = "pin_ciphertext"
         private const val WIDGET_REVEALED = "widget_revealed"
+        private const val BIOMETRIC_ENABLED = "biometric_enabled"
         private const val KEY_ALIAS = "duonote_security_key"
         private const val ANDROID_KEY_STORE = "AndroidKeyStore"
 

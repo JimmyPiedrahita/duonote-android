@@ -35,6 +35,12 @@
             android:name=".AuthActivity"
             android:exported="false" />
         <activity
+            android:name=".SecurityActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChangePinActivity"
+            android:exported="false" />
+        <activity
             android:name=".DialogActivity"
             android:theme="@style/Theme.DuoNote.Dialog"
             android:exported="false"/>

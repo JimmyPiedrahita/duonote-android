@@ -77,6 +77,16 @@
                     app:tint="@color/text_primary" />
 
                 <ImageButton
+                    android:id="@+id/btnSecurity"
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_button_header"
+                    android:contentDescription="Seguridad"
+                    android:src="@drawable/ic_lock"
+                    app:tint="@color/text_primary" />
+
+                <ImageButton
                     android:id="@+id/btnLogout"
                     android:layout_width="42dp"
                     android:layout_height="42dp"

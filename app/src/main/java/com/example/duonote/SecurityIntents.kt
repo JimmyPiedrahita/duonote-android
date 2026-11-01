@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 
 object SecurityIntents {
+    fun settings(context: Context): Intent = Intent(context, SecurityActivity::class.java)
+
+    fun changePin(context: Context): Intent = Intent(context, ChangePinActivity::class.java)
+
     fun createPin(context: Context): Intent = Intent(context, AuthActivity::class.java).apply {
         putExtra(AuthActivity.EXTRA_SETUP, true)
         putExtra(AuthActivity.EXTRA_MODE, AuthActivity.MODE_WIDGET_REVEAL)

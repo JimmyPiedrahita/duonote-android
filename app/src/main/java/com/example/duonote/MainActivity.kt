@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rvNotes: RecyclerView
     private lateinit var fabAddNote: FloatingActionButton
     private lateinit var btnAddWidget: ImageButton
+    private lateinit var btnSecurity: ImageButton
     private lateinit var btnLogout: ImageButton
     private lateinit var emptyState: LinearLayout
     private lateinit var progressBar: ProgressBar
@@ -102,6 +103,7 @@ class MainActivity : AppCompatActivity() {
         rvNotes = findViewById(R.id.rvNotes)
         fabAddNote = findViewById(R.id.fabAddNote)
         btnAddWidget = findViewById(R.id.btnAddWidget)
+        btnSecurity = findViewById(R.id.btnSecurity)
         btnLogout = findViewById(R.id.btnLogout)
         emptyState = findViewById(R.id.emptyState)
         progressBar = findViewById(R.id.progressBar)
@@ -129,6 +131,10 @@ class MainActivity : AppCompatActivity() {
 
         btnAddWidget.setOnClickListener {
             addWidgetToHomeScreen()
+        }
+
+        btnSecurity.setOnClickListener {
+            startActivity(SecurityIntents.settings(this))
         }
 
         btnLogout.setOnClickListener {

@@ -5,6 +5,7 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -33,24 +34,46 @@ class AuthActivity : FragmentActivity() {
         val container = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
             setPadding(padding, padding, padding, padding)
+            gravity = android.view.Gravity.CENTER_HORIZONTAL
+            setBackgroundResource(R.drawable.bg_gradient_main)
         }
-        val title = TextView(this).apply {
-            text = if (setupMode) "Crear PIN de seguridad" else "Desbloquear DuoNote"
-            textSize = 22f
-        }
-        container.addView(title, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        container.addView(ImageView(this).apply {
+            setImageResource(R.drawable.ic_duonote_logo)
+        }, LinearLayout.LayoutParams(dp(52), dp(52)).apply { topMargin = dp(28); bottomMargin = dp(34) })
+        container.addView(TextView(this).apply {
+            text = if (setupMode) "PROTECCIÓN DE ACCESO" else "APP BLOQUEADA"
+            textSize = 10f
+            letterSpacing = .16f
+            setTextColor(getColor(R.color.text_secondary))
+        })
+        container.addView(TextView(this).apply {
+            text = if (setupMode) "Crea tu PIN" else "Bienvenido de nuevo"
+            textSize = 28f
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+            setTextColor(getColor(R.color.text_primary))
+            gravity = android.view.Gravity.CENTER
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
+        container.addView(TextView(this).apply {
+            text = if (setupMode) "Protege tus notas con un código de 4 a 6 dígitos." else "Ingresa tu PIN para acceder a tus notas."
+            textSize = 12f
+            setTextColor(getColor(R.color.text_secondary))
+            gravity = android.view.Gravity.CENTER
+        }, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10); bottomMargin = dp(26) })
 
         if (setupMode) {
-            val first = pinField("PIN de 4 dígitos")
+            val first = pinField("PIN de 4 a 6 dígitos")
             val confirmation = pinField("Confirmar PIN")
             container.addView(first)
-            container.addView(confirmation)
+            container.addView(confirmation, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp(62)).apply { topMargin = dp(10) })
             val save = Button(this).apply {
                 text = "Guardar PIN"
+                isAllCaps = false
+                setTextColor(getColor(R.color.text_on_accent))
+                background = getDrawable(R.drawable.bg_security_primary)
                 setOnClickListener {
                     val pin = first.text.toString()
-                    if (!pin.matches(Regex("\\d{4}"))) {
-                        first.error = "Usa exactamente 4 dígitos"
+                    if (!pin.matches(Regex("\\d{4,6}"))) {
+                        first.error = "Usa entre 4 y 6 dígitos"
                     } else if (pin != confirmation.text.toString()) {
                         confirmation.error = "Los PIN no coinciden"
                     } else {
@@ -66,6 +89,9 @@ class AuthActivity : FragmentActivity() {
             container.addView(pinInput)
             val unlock = Button(this).apply {
                 text = "Desbloquear con PIN"
+                isAllCaps = false
+                setTextColor(getColor(R.color.text_on_accent))
+                background = getDrawable(R.drawable.bg_security_primary)
                 setOnClickListener { verifyPin() }
             }
             container.addView(unlock)
@@ -77,7 +103,14 @@ class AuthActivity : FragmentActivity() {
         hint = hintText
         inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
         maxLines = 1
+        textSize = 20f
+        gravity = android.view.Gravity.CENTER
+        setHintTextColor(getColor(R.color.text_secondary))
+        background = getDrawable(R.drawable.bg_security_input)
+        setTextColor(getColor(R.color.text_primary))
     }
+
+    private fun dp(value: Int) = (value * resources.displayMetrics.density).toInt()
 
     private fun verifyPin() {
         if (securityStore.verifyPin(pinInput.text.toString())) {
@@ -90,7 +123,8 @@ class AuthActivity : FragmentActivity() {
     private fun offerBiometric() {
         val manager = BiometricManager.from(this)
         val authenticators = BiometricManager.Authenticators.BIOMETRIC_STRONG
-        if (manager.canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) return
+        if (!securityStore.isBiometricEnabled() ||
+            manager.canAuthenticate(authenticators) != BiometricManager.BIOMETRIC_SUCCESS) return
 
         val prompt = BiometricPrompt(this, ContextCompat.getMainExecutor(this),
             object : BiometricPrompt.AuthenticationCallback() {

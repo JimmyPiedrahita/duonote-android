@@ -82,6 +82,8 @@
     <color name="widget_text_pending">#D9D8D3</color>
     <color name="widget_text_completed">#74757A</color>
     <color name="widget_action">#8C8D91</color>
+    <color name="status_green">#8EB194</color>
+    <color name="error_muted">#A16F6B</color>
 
     <!-- Legacy colors mapped to new theme -->
     <color name="color1">#0a0c10</color>
