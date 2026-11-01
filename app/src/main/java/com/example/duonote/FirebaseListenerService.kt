@@ -102,6 +102,11 @@ class FirebaseListenerService : Service() {
         return START_STICKY
     }
 
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        Log.w("FirebaseService", "Foreground service timeout (type=$fgsType); stopping")
+        stopSelf(startId)
+    }
+
     override fun onBind(intent: Intent?): IBinder? = null
 
     private fun startForegroundServiceWithNotification() {
