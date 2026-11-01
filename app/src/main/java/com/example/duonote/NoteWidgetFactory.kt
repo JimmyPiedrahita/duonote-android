@@ -84,14 +84,14 @@ class NoteWidgetFactory(private val context: Context) : RemoteViewsFactory {
         )
         
         if (note.isCompleted == true) {
-            views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.widget_text_completed))
+            views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.note_completed_text))
             views.setInt(
                 R.id.note_item_text,
                 "setPaintFlags",
                 android.graphics.Paint.STRIKE_THRU_TEXT_FLAG or android.graphics.Paint.ANTI_ALIAS_FLAG
             )
         } else {
-            views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.widget_text_pending))
+            views.setInt(R.id.note_item_text, "setTextColor", context.getColor(R.color.text_primary))
             views.setInt(
                 R.id.note_item_text,
                 "setPaintFlags",

@@ -8,7 +8,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.RenderEffect
+import android.graphics.Shader
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -207,12 +210,34 @@ class MainActivity : AppCompatActivity() {
         dialogView.findViewById<com.google.android.material.button.MaterialButton>(
             R.id.btnCloseConnectionQr
         ).setOnClickListener { dialog.dismiss() }
+        dialog.setOnShowListener {
+            dialog.window?.setDimAmount(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) 0.18f else 0.6f
+            )
+            blurActivityBackground()
+        }
+        dialog.setOnDismissListener { clearActivityBackgroundBlur() }
         dialog.show()
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.window?.setLayout(
             android.view.ViewGroup.LayoutParams.MATCH_PARENT,
             android.view.ViewGroup.LayoutParams.WRAP_CONTENT
         )
+    }
+
+    private fun blurActivityBackground() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val radius = 16f * resources.displayMetrics.density
+            findViewById<View?>(R.id.main)?.setRenderEffect(
+                RenderEffect.createBlurEffect(radius, radius, Shader.TileMode.CLAMP)
+            )
+        }
+    }
+
+    private fun clearActivityBackgroundBlur() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            findViewById<View?>(R.id.main)?.setRenderEffect(null)
+        }
     }
 
     private fun createQrBitmap(content: String): Bitmap {
