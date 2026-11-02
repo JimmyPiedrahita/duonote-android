@@ -2,9 +2,6 @@
     <string name="app_name">DuoNote</string>
     <string name="widget_empty">Aún no hay notas</string>
     <string name="widget_empty_hint">Agrega una desde la barra inferior</string>
-    <string name="widget_hide">Ocultar</string>
-    <string name="widget_refresh">Recargar</string>
-    <string name="widget_add">Agregar</string>
     <string name="tittle_widget">Notes</string>
     <string name="description_button_add">Button to add a note</string>
     <string name="description_button_copy">Button to copy the text of the note</string>
